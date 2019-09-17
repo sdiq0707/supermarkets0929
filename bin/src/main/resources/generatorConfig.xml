@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+	<classPathEntry location="D:\mysql-connector-java-5.0.3.jar"/>
+  <context id="context1" >
+  	<commentGenerator>
+		<property name="suppressAllComments" value="true" />
+	</commentGenerator>
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/supermarket?characterEncoding=utf-8" userId="root" password="123456" />
+    <javaModelGenerator targetPackage="com.woniu.domain" targetProject="supermarkets" ></javaModelGenerator>
+    <sqlMapGenerator targetPackage="com.woniu.dao" targetProject="supermarkets" ></sqlMapGenerator>
+    <javaClientGenerator targetPackage="com.woniu.dao" targetProject="supermarkets" type="XMLMAPPER" />
+    
+    <table schema="" tableName="BackDetail" ></table>
+    <table schema="" tableName="Product" ></table>
+    <table schema="" tableName="ProductBack" ></table>
+    <table schema="" tableName="ProductIN" ></table>
+    <table schema="" tableName="ProductINDetail" ></table>
+    <table schema="" tableName="ProductSpecification" ></table>
+    <table schema="" tableName="ProductType" ></table>
+    <table schema="" tableName="ReducePrice" ></table>
+    <table schema="" tableName="Sales" ></table>
+    <table schema="" tableName="SalesDetail" ></table>
+    <table schema="" tableName="Supplier" ></table>
+    <table schema="" tableName="VIP" ></table>
+    <table schema="" tableName="staff" ></table>
+    <table schema="" tableName="userinfo" ></table>
+    <table schema="" tableName="userinforole" ></table>
+    <table schema="" tableName="role" ></table>
+    <table schema="" tableName="roletree" ></table>
+    <table schema="" tableName="tree" ></table>
+    <table schema="" tableName="tlog" ></table>
+    
+  </context>
+</generatorConfiguration>
