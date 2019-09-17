@@ -72,7 +72,7 @@ public class ShiroConfig {
 		securityManager.setRealm(realm());
 		return securityManager;
 	}
-	
+
 	@Bean
 	public ShiroFilterFactoryBean shiroFilter() {
 		
