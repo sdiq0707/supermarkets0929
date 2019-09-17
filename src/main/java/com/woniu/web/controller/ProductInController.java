@@ -19,7 +19,7 @@ import com.woniu.service.IProductInService;
 public class ProductInController {
 	@Autowired
 	private IProductInService productInservice;
-	//添加
+	//添加  
 	@PutMapping("/save")
 	public String save(Productin productin) {
 		productInservice.save(productin);

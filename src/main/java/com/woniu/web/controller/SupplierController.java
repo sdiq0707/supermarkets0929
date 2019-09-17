@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.woniu.domain.Supplier;
 import com.woniu.service.ISupplierService;
-
+  
 @RestController
 @RequestMapping("/suppliers")
 public class SupplierController {

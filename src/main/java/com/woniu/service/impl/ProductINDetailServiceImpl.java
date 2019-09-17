@@ -15,7 +15,7 @@ import com.woniu.service.IProductINDetailService;
 @Transactional
 public class ProductINDetailServiceImpl implements IProductINDetailService {
 
-	
+	 
 	@Resource
 	private ProductindetailMapper productindetailMapper;
 	
