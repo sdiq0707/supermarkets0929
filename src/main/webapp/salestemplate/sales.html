@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		$(function(){
+			$("button:eq(0)").click(function(){
+				var param=$("form:eq(0)").serialize();
+				$.ajax({
+					type:"post",
+					url:"/sales",
+					data:param,
+					success:function(){
+						alert("添加成功");
+					}
+				});
+			});
+		});
+	</script>
+	<form class="well form-search">
+		销售编号：<input type="text" name="saleid" class="input-medium search-query"></br>
+		销售总金额：<input type="text" name="saleallprice" class="input-medium search-query"></br>
+		销售日期：<input type="text" name="saledate" class="input-medium search-query"></br>
+		操作员编号：<input type="text" name="userid" class="input-medium search-query"></br>
+		销售细节编号：<input type="text" name="sdid" class="input-medium search-query"></br>
+		会员编号：<input type="text" name="vipid" class="input-medium search-query"></br>
+		备注：<input type="text" name="saleothers" class="input-medium search-query"></br>
+		<button type="button">提交</button>
+	</form>  
+
+	<table class="table table-striped">
+		<caption>销售表</caption>
+		<thead>
+			<tr>
+				<th>销售编号</th>
+				<th>销售总金额</th>
+				<th>销售日期</th>
+				<th>操作员编号</th>
+				<th>销售细节编号</th>
+				<th>会员编号</th>
+				<th>备注</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Tanmay</td>
+				<td>Bangalore</td>
+				<td>560001</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
