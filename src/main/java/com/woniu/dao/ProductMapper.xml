@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.woniu.dao.ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.woniu.domain.Product" >
+    <id column="ProductID" property="productid" jdbcType="INTEGER" />
+    <result column="PName" property="pname" jdbcType="VARCHAR" />
+    <result column="PTypeID" property="ptypeid" jdbcType="INTEGER" />
+    <result column="SupplierID" property="supplierid" jdbcType="INTEGER" />
+    <result column="PSpecification" property="pspecification" jdbcType="VARCHAR" />
+    <result column="PColor" property="pcolor" jdbcType="VARCHAR" />
+    <result column="PState" property="pstate" jdbcType="VARCHAR" />
+    <result column="Punit" property="punit" jdbcType="VARCHAR" />
+    <result column="PImportPrice" property="pimportprice" jdbcType="REAL" />
+    <result column="PSellPrice" property="psellprice" jdbcType="REAL" />
+    <result column="PStockNum" property="pstocknum" jdbcType="INTEGER" />
+    <result column="PCautionNum" property="pcautionnum" jdbcType="INTEGER" />
+    <result column="PDeadDate" property="pdeaddate" jdbcType="DATE" />
+    <result column="PSID" property="psid" jdbcType="INTEGER" />
+    <result column="POthers" property="pothers" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ProductID, PName, PTypeID, SupplierID, PSpecification, PColor, PState, Punit, PImportPrice, 
+    PSellPrice, PStockNum, PCautionNum, PDeadDate, PSID, POthers
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.domain.ProductExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product
+    where ProductID = #{productid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product
+    where ProductID = #{productid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.woniu.domain.ProductExample" >
+    delete from product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.woniu.domain.Product" >
+    insert into product (ProductID, PName, PTypeID, 
+      SupplierID, PSpecification, PColor, 
+      PState, Punit, PImportPrice, 
+      PSellPrice, PStockNum, PCautionNum, 
+      PDeadDate, PSID, POthers
+      )
+    values (#{productid,jdbcType=INTEGER}, #{pname,jdbcType=VARCHAR}, #{ptypeid,jdbcType=INTEGER}, 
+      #{supplierid,jdbcType=INTEGER}, #{pspecification,jdbcType=VARCHAR}, #{pcolor,jdbcType=VARCHAR}, 
+      #{pstate,jdbcType=VARCHAR}, #{punit,jdbcType=VARCHAR}, #{pimportprice,jdbcType=REAL}, 
+      #{psellprice,jdbcType=REAL}, #{pstocknum,jdbcType=INTEGER}, #{pcautionnum,jdbcType=INTEGER}, 
+      #{pdeaddate,jdbcType=DATE}, #{psid,jdbcType=INTEGER}, #{pothers,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.woniu.domain.Product" >
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productid != null" >
+        ProductID,
+      </if>
+      <if test="pname != null" >
+        PName,
+      </if>
+      <if test="ptypeid != null" >
+        PTypeID,
+      </if>
+      <if test="supplierid != null" >
+        SupplierID,
+      </if>
+      <if test="pspecification != null" >
+        PSpecification,
+      </if>
+      <if test="pcolor != null" >
+        PColor,
+      </if>
+      <if test="pstate != null" >
+        PState,
+      </if>
+      <if test="punit != null" >
+        Punit,
+      </if>
+      <if test="pimportprice != null" >
+        PImportPrice,
+      </if>
+      <if test="psellprice != null" >
+        PSellPrice,
+      </if>
+      <if test="pstocknum != null" >
+        PStockNum,
+      </if>
+      <if test="pcautionnum != null" >
+        PCautionNum,
+      </if>
+      <if test="pdeaddate != null" >
+        PDeadDate,
+      </if>
+      <if test="psid != null" >
+        PSID,
+      </if>
+      <if test="pothers != null" >
+        POthers,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productid != null" >
+        #{productid,jdbcType=INTEGER},
+      </if>
+      <if test="pname != null" >
+        #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="ptypeid != null" >
+        #{ptypeid,jdbcType=INTEGER},
+      </if>
+      <if test="supplierid != null" >
+        #{supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="pspecification != null" >
+        #{pspecification,jdbcType=VARCHAR},
+      </if>
+      <if test="pcolor != null" >
+        #{pcolor,jdbcType=VARCHAR},
+      </if>
+      <if test="pstate != null" >
+        #{pstate,jdbcType=VARCHAR},
+      </if>
+      <if test="punit != null" >
+        #{punit,jdbcType=VARCHAR},
+      </if>
+      <if test="pimportprice != null" >
+        #{pimportprice,jdbcType=REAL},
+      </if>
+      <if test="psellprice != null" >
+        #{psellprice,jdbcType=REAL},
+      </if>
+      <if test="pstocknum != null" >
+        #{pstocknum,jdbcType=INTEGER},
+      </if>
+      <if test="pcautionnum != null" >
+        #{pcautionnum,jdbcType=INTEGER},
+      </if>
+      <if test="pdeaddate != null" >
+        #{pdeaddate,jdbcType=DATE},
+      </if>
+      <if test="psid != null" >
+        #{psid,jdbcType=INTEGER},
+      </if>
+      <if test="pothers != null" >
+        #{pothers,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.woniu.domain.ProductExample" resultType="java.lang.Integer" >
+    select count(*) from product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update product
+    <set >
+      <if test="record.productid != null" >
+        ProductID = #{record.productid,jdbcType=INTEGER},
+      </if>
+      <if test="record.pname != null" >
+        PName = #{record.pname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ptypeid != null" >
+        PTypeID = #{record.ptypeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.supplierid != null" >
+        SupplierID = #{record.supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="record.pspecification != null" >
+        PSpecification = #{record.pspecification,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pcolor != null" >
+        PColor = #{record.pcolor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pstate != null" >
+        PState = #{record.pstate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.punit != null" >
+        Punit = #{record.punit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pimportprice != null" >
+        PImportPrice = #{record.pimportprice,jdbcType=REAL},
+      </if>
+      <if test="record.psellprice != null" >
+        PSellPrice = #{record.psellprice,jdbcType=REAL},
+      </if>
+      <if test="record.pstocknum != null" >
+        PStockNum = #{record.pstocknum,jdbcType=INTEGER},
+      </if>
+      <if test="record.pcautionnum != null" >
+        PCautionNum = #{record.pcautionnum,jdbcType=INTEGER},
+      </if>
+      <if test="record.pdeaddate != null" >
+        PDeadDate = #{record.pdeaddate,jdbcType=DATE},
+      </if>
+      <if test="record.psid != null" >
+        PSID = #{record.psid,jdbcType=INTEGER},
+      </if>
+      <if test="record.pothers != null" >
+        POthers = #{record.pothers,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update product
+    set ProductID = #{record.productid,jdbcType=INTEGER},
+      PName = #{record.pname,jdbcType=VARCHAR},
+      PTypeID = #{record.ptypeid,jdbcType=INTEGER},
+      SupplierID = #{record.supplierid,jdbcType=INTEGER},
+      PSpecification = #{record.pspecification,jdbcType=VARCHAR},
+      PColor = #{record.pcolor,jdbcType=VARCHAR},
+      PState = #{record.pstate,jdbcType=VARCHAR},
+      Punit = #{record.punit,jdbcType=VARCHAR},
+      PImportPrice = #{record.pimportprice,jdbcType=REAL},
+      PSellPrice = #{record.psellprice,jdbcType=REAL},
+      PStockNum = #{record.pstocknum,jdbcType=INTEGER},
+      PCautionNum = #{record.pcautionnum,jdbcType=INTEGER},
+      PDeadDate = #{record.pdeaddate,jdbcType=DATE},
+      PSID = #{record.psid,jdbcType=INTEGER},
+      POthers = #{record.pothers,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.woniu.domain.Product" >
+    update product
+    <set >
+      <if test="pname != null" >
+        PName = #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="ptypeid != null" >
+        PTypeID = #{ptypeid,jdbcType=INTEGER},
+      </if>
+      <if test="supplierid != null" >
+        SupplierID = #{supplierid,jdbcType=INTEGER},
+      </if>
+      <if test="pspecification != null" >
+        PSpecification = #{pspecification,jdbcType=VARCHAR},
+      </if>
+      <if test="pcolor != null" >
+        PColor = #{pcolor,jdbcType=VARCHAR},
+      </if>
+      <if test="pstate != null" >
+        PState = #{pstate,jdbcType=VARCHAR},
+      </if>
+      <if test="punit != null" >
+        Punit = #{punit,jdbcType=VARCHAR},
+      </if>
+      <if test="pimportprice != null" >
+        PImportPrice = #{pimportprice,jdbcType=REAL},
+      </if>
+      <if test="psellprice != null" >
+        PSellPrice = #{psellprice,jdbcType=REAL},
+      </if>
+      <if test="pstocknum != null" >
+        PStockNum = #{pstocknum,jdbcType=INTEGER},
+      </if>
+      <if test="pcautionnum != null" >
+        PCautionNum = #{pcautionnum,jdbcType=INTEGER},
+      </if>
+      <if test="pdeaddate != null" >
+        PDeadDate = #{pdeaddate,jdbcType=DATE},
+      </if>
+      <if test="psid != null" >
+        PSID = #{psid,jdbcType=INTEGER},
+      </if>
+      <if test="pothers != null" >
+        POthers = #{pothers,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ProductID = #{productid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.woniu.domain.Product" >
+    update product
+    set PName = #{pname,jdbcType=VARCHAR},
+      PTypeID = #{ptypeid,jdbcType=INTEGER},
+      SupplierID = #{supplierid,jdbcType=INTEGER},
+      PSpecification = #{pspecification,jdbcType=VARCHAR},
+      PColor = #{pcolor,jdbcType=VARCHAR},
+      PState = #{pstate,jdbcType=VARCHAR},
+      Punit = #{punit,jdbcType=VARCHAR},
+      PImportPrice = #{pimportprice,jdbcType=REAL},
+      PSellPrice = #{psellprice,jdbcType=REAL},
+      PStockNum = #{pstocknum,jdbcType=INTEGER},
+      PCautionNum = #{pcautionnum,jdbcType=INTEGER},
+      PDeadDate = #{pdeaddate,jdbcType=DATE},
+      PSID = #{psid,jdbcType=INTEGER},
+      POthers = #{pothers,jdbcType=VARCHAR}
+    where ProductID = #{productid,jdbcType=INTEGER}
+  </update>
+</mapper>
