@@ -6,35 +6,60 @@
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" />
 <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
 </head>
 <body>
-	<script type="text/javascript">
-		$(function(){
-			$("button:eq(0)").click(function(){
-				var param=$("form:eq(0)").serialize();
-				$.ajax({
-					type:"post",
-					url:"/sales",
-					data:param,
-					success:function(){
-						alert("添加成功");
-					}
-				});
-			});
-		});
-	</script>
-	<form class="well form-search">
-		销售编号：<input type="text" name="saleid" class="input-medium search-query"></br>
-		销售总金额：<input type="text" name="saleallprice" class="input-medium search-query"></br>
-		销售日期：<input type="text" name="saledate" class="input-medium search-query"></br>
-		操作员编号：<input type="text" name="userid" class="input-medium search-query"></br>
-		销售细节编号：<input type="text" name="sdid" class="input-medium search-query"></br>
-		会员编号：<input type="text" name="vipid" class="input-medium search-query"></br>
-		备注：<input type="text" name="saleothers" class="input-medium search-query"></br>
-		<button type="button">提交</button>
-	</form>  
-
-	<table class="table table-striped">
+	<div id="app">
+		<div v-show="flag" style="border:1px solid red">
+		销售编号：<input type="text" v-model="u_saleid" class="input-medium search-query"></br>
+		销售总金额：<input type="text" v-model="u_saleallprice" class="input-medium search-query"></br>
+		销售日期：<input type="text" v-model="u_saledate" class="input-medium search-query"></br>
+		操作员编号：<input type="text" v-model="u_userid" class="input-medium search-query"></br>
+		销售细节编号：<input type="text" v-model="u_sdid" class="input-medium search-query"></br>
+		会员编号：<input type="text" v-model="u_vipid" class="input-medium search-query"></br>
+		备注：       <input type="text" v-model="u_saleothers" class="input-medium search-query"></br>
+		<button @click="update">确认修改</button>
+		</div>
+	<div style="padding: 0px 400px 0px;border:10px solid yellow">
+        <div class="input-group">
+            <span class="input-group-addon">销售编号：</span>
+            <input type="text" class="form-control" v-model="saleid"/>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">销售总金额：</span>
+            <input type="text" class="form-control" v-model="saleallprice">
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">销售日期：</span>
+            <input type="text" class="form-control" v-model="saledate">
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon" v-model="userid">操作员编号：</span>
+            <input type="text" class="form-control" >
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon" v-model="sdid">销售细节编号：</span>
+            <input type="text" class="form-control" >
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon" v-model="vipid" >会员编号：</span>
+            <input type="text" class="form-control" >
+        </div>
+        </br>
+        <div class="input-group">
+            <span class="input-group-addon">备注：</span>
+            <input type="text" class="form-control" v-model="saleothers">
+        </div>
+        <br>
+	</div>
+		<button @click="save">save</button>
+			<table class="table table-striped">
 		<caption>销售表</caption>
 		<thead>
 			<tr>
@@ -45,15 +70,113 @@
 				<th>销售细节编号</th>
 				<th>会员编号</th>
 				<th>备注</th>
+				<th>
+				修改
+				|
+				删除
+				</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>Tanmay</td>
-				<td>Bangalore</td>
-				<td>560001</td>
+			<tr v-for="item in list">
+				<td>{{item.saleid}}</td>
+				<td>{{item.saleallprice}}</td>
+				<td>{{item.saledate|df}}</td>
+				<td>{{item.userid}}</td>
+				<td>{{item.sdid}}</td>
+				<td>{{item.vipid}}</td>
+				<td>{{item.saleothers}}</td>
+				<td>
+				<a @click="updateUI(item)">修改</a>
+				<a @click="del(item.saleid)">删除</a>
+				</td>
 			</tr>
 		</tbody>
 	</table>
+	</div>
+	<script type="text/javascript">
+		Vue.filter("df",function(dateStr){
+			var dd=new Date(dateStr);
+			var y=dd.getFullYear();
+			var m=dd.getMonth()+1;
+			var d=dd.getDate();
+			return `${y}-${m}-${d}`;
+		});
+		var vue=new Vue({
+			el:"#app",
+			data:{
+				saleid:"",
+				saleallprice:"",
+				saledate:"",
+				userid:"",
+				sdid:"",
+				vipid:"",
+				saleothers:"",
+				list:"",
+				flag:false,
+				u_saleid:"",
+				u_saleallprice:"",
+				u_saledate:"",
+				u_userid:"",
+				u_sdid:"",
+				u_vipid:"",
+				u_saleothers:""
+			},
+			created(){
+				this.findAll();
+			},
+			methods:{
+				save(){
+						var json={	saleid:this.saleid,
+									saleallprice:this.saleallprice,
+									saledate:this.saledate,//日期为yy-mm-dd
+									userid:this.userid,
+									vipid:this.vipid,
+									saleothers:this.saleothers
+							};
+					this.$http.post("http://localhost:9999/sales",json).then(function(){
+						this.findAll();
+						this.saleid=this.saleallprice=this.saledate=this.userid=this.sdid=this.vipid=this.saleothers="";
+					});
+				},
+				findAll(){
+					this.$http.get("http://localhost:9999/sales").then(function(result){
+						this.list=result.body;
+					});
+				},
+				del(id){
+					this.$http.post("http://localhost:9999/sales",{"saleid":id,"_method":"delete"},{emulateJSON:true}).then(function(){
+						this.findAll();
+					});
+				},
+				updateUI(item){
+					this.u_saleid=item.saleid,
+					this.u_saleallprice=item.saleallprice,
+					this.u_saledate=item.saledate,
+					this.u_userid=item.userid,
+					this.u_sdid=item.sdid,
+					this.u_vipid=item.vipid,
+					this.u_saleothers=item.saleothers,
+					this.flag=true
+					
+				},
+				update(){
+					var json={saleid:this.u_saleid,
+							saleallprice:this.u_saleallprice,
+							saledate:this.u_saledate,
+							userid:this.u_userid,
+							sdid:this.u_vipid,
+							vipid:this.u_vipid,
+							saleothers:this.u_saleothers,
+							"_method":"put"
+					};
+					this.$http.post("http://localhost:9999/sales",json,{emulateJSON:true}).then(function(){
+						this.findAll();
+						this.flag=false;
+					});
+				}
+			}
+		});
+	</script>
 </body>
 </html>
