@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,13 +23,14 @@ public class ProductTypeController {
 	   private IProducttypeService service;
 	@PostMapping
 	@ResponseBody()
-	public void save(Producttype producttype) {
+	public void save(@RequestBody Producttype producttype) {
 		service.save(producttype);
 	}
 	@DeleteMapping
 	@ResponseBody
-	public void delete(Integer Ptypeid) {
-		service.delete(Ptypeid);
+	public void delete(Integer ptypeid) {
+		System.out.println(ptypeid);
+		service.delete(ptypeid);
 	}
 	@PutMapping
 	@ResponseBody
