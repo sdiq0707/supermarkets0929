@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,30 +22,27 @@ public class ProductInDetailController {
 	@Autowired
 	private IProductINDetailService productInDetailservice;
 
-	@PutMapping("/save")
-	public String save(Productindetail productindetail) {
+	@PostMapping
+	public void save(@RequestBody Productindetail productindetail) {
 		productInDetailservice.save(productindetail);
-		return "true";
 	}
 
-	@DeleteMapping("/delete/{piid}")
-	public String delete(@PathVariable("piid") int piid) {
+	@DeleteMapping
+	public void delete(int piid) {
 		productInDetailservice.delete(piid);
-		return "true";
 	}
 
-	@PostMapping("/update")
-	public String update(Productindetail productindetail) {
+	@PutMapping
+	public void update(Productindetail productindetail) {
 		productInDetailservice.update(productindetail);
-		return "true";
 	}
 
 	@GetMapping("/findOne/{piid}")
-	public Productindetail findOne(@PathVariable("piid") int piid) {
-		return productInDetailservice.find(piid);
+	public void findOne(@PathVariable("piid") int piid) {
+		 productInDetailservice.find(piid);
 	}
 
-	@GetMapping("/findAll")
+	@GetMapping
 	public List<Productindetail> findAll() {
 		return productInDetailservice.findAll();
 	}

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,31 +21,29 @@ public class ProductInController {
 	@Autowired
 	private IProductInService productInservice;
 	//添加  
-	@PutMapping("/save")
-	public String save(Productin productin) {
+	@PostMapping
+	public void save(@RequestBody Productin productin) {
 		productInservice.save(productin);
-		return "true";
 	}
 	//删除
-	@DeleteMapping("/delete/{piid}")
-	public String delete(@PathVariable("piid") int piid) {
+	@DeleteMapping
+	public void delete( int piid) {
 		productInservice.delete(piid);
-		return "true";
 	}
-	//修改
-	@PostMapping("/update")
-	public String update(Productin productin) {
+	//修改  
+	@PutMapping
+	public void update(Productin productin) {
 		productInservice.update(productin);
-		return "true";
 	}
-	//查询一个
+	//查询一个    
 	@GetMapping("/findOne/{piid}")
-	public Productin findOne(@PathVariable("piid") int piid) {
-		return productInservice.findOne(piid);
+	public void findOne(@PathVariable("piid") int piid) {
+		 productInservice.findOne(piid);
 	}
 	//查询所有
-	@GetMapping("/findAll")
-	public List<Productin> findAll() {
+	@GetMapping
+	public List<Productin> findAll() { 
+		
 		return productInservice.findAll();
 	}
 }
