@@ -43,5 +43,8 @@ public class Product implements Serializable{
     private Integer psid;
 
     private String pothers;
+    
+    //商品类型实体
+    private Producttype producttype;
 
 }

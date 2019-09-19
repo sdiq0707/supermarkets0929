@@ -5,6 +5,14 @@
     <id column="PTypeID" property="ptypeid" jdbcType="INTEGER" />
     <result column="PTypename" property="ptypename" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <select id="findProducttypeById" resultMap="BaseResultMap">
+  		select * from Producttype pt where exists(
+				select p.PTypeID from product p where
+				p.PTypeID=pt.PTypeID and p.PTypeID=#{pt.PTypeID}
+  		)
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

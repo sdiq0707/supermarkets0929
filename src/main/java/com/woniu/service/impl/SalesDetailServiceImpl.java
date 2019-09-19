@@ -29,7 +29,7 @@ public class SalesDetailServiceImpl implements ISalesDetailService {
 
 	@Override
 	public List<Salesdetail> findAll() {
-		List<Salesdetail> list = mapper.selectByExample(null);
+		List<Salesdetail> list = mapper.findAllSaleDetail();
 		return list;
 	}
 

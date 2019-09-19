@@ -20,12 +20,21 @@ public class Sales implements Serializable{
 
     private Date saledate;
 
-    private Integer userid;
-
-    private Integer sdid;
-
-    private Integer vipid;
-
     private String saleothers;
+    
+    private Integer userid;
+    
+    private Integer vipid;
+    
+    private Integer sdid;
+    
+    //操作员实体
+    private Userinfo userinfo;
+    
+    //销售详情实体
+    private Salesdetail salesdetail;
+    
+    //会员信息实体
+    private Vip vip;
 
 }

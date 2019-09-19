@@ -44,8 +44,8 @@ public class SalesController {
 	}
 	@GetMapping
 	public List<Sales> findAll() {
-		System.out.println("SalesController.findAll()");
 		List<Sales> list = service.findAll();
+		System.out.println("SalesController.findAll()"+list);
 		return list;
 	}
 }

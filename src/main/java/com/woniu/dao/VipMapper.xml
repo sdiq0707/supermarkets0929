@@ -10,6 +10,14 @@
     <result column="VIPDate" property="vipdate" jdbcType="DATE" />
     <result column="status" property="status" jdbcType="BIT" />
   </resultMap>
+  
+  <select id="findByVipId" resultMap="BaseResultMap">
+  	SELECT * FROM vip v WHERE EXISTS(
+	SELECT s.vipid FROM sales s
+   	WHERE v.VIPID=s.vipid AND s.vipid=#{vipid}
+)
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

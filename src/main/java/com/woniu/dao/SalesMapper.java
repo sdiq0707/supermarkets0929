@@ -27,4 +27,6 @@ public interface SalesMapper {
     int updateByPrimaryKeySelective(Sales record);
 
     int updateByPrimaryKey(Sales record);
+    //用户信息表，销售详情表，会员表三表查询
+    List<Sales> selectFindAll();
 }

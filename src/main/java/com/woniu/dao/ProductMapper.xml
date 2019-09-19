@@ -18,6 +18,18 @@
     <result column="PSID" property="psid" jdbcType="INTEGER" />
     <result column="POthers" property="pothers" jdbcType="VARCHAR" />
   </resultMap>
+  
+	<select id="findProductById" resultMap="ProductDetailMap">
+		select * from product p where exists(
+			select sd.ProductID from salesdetail sd
+			where p.ProductID=sd.ProductID and sd.ProductID=#{p.ProductID}
+		)
+	</select>
+	
+	<resultMap type="Product" id="ProductDetailMap" extends="BaseResultMap">
+		<collection property="producttype" column="PTypeID" select="com.woniu.dao.ProducttypeMapper.findProducttypeById"></collection>
+	</resultMap>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

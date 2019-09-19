@@ -27,4 +27,7 @@ public interface SalesdetailMapper {
     int updateByPrimaryKeySelective(Salesdetail record);
 
     int updateByPrimaryKey(Salesdetail record);
+    
+    //级联查询
+    List<Salesdetail> findAllSaleDetail();
 }

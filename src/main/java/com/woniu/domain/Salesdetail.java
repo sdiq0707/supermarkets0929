@@ -24,5 +24,11 @@ public class Salesdetail implements Serializable{
     private Float psellprice;
 
     private Integer psid;
+    
+    //商品实体
+    private Product product;
+    
+    //商品规格表
+    private Productspecification  productspecification;
 
 }

@@ -10,6 +10,16 @@
     <result column="VIPID" property="vipid" jdbcType="INTEGER" />
     <result column="saleOthers" property="saleothers" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <resultMap type="com.woniu.domain.Sales" id="sss" extends="BaseResultMap">
+  	<collection property="userinfo" column="userID" select="com.woniu.dao.UserinfoMapper.findByUserId" />
+  	<collection property="salesdetail" column="SDID" select="com.woniu.dao.SalesdetailMapper.findBySSId"/>
+  	<collection property="vip" column="VIPID" select="com.woniu.dao.VipMapper.findByVipId"></collection>
+  </resultMap>
+    <select id="selectFindAll" resultMap="sss">
+  		select * from sales
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
