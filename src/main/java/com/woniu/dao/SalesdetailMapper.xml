@@ -9,6 +9,25 @@
     <result column="PSellPrice" property="psellprice" jdbcType="REAL" />
     <result column="PSID" property="psid" jdbcType="INTEGER" />
   </resultMap>
+  
+  <resultMap type="com.woniu.domain.Salesdetail" id="OtherResultMap" extends="BaseResultMap">
+  	<collection property="product" column="PSID" select="com.woniu.dao.ProductMapper.findProductById"></collection>
+  	<collection property="productspecification" column="ProductID" select="com.woniu.dao.ProductspecificationMapper.findProductspecificationById"></collection>
+  </resultMap>
+  
+  <select id="findAllSaleDetail" resultMap="OtherResultMap" resultType="com.woniu.domain.Salesdetail">
+  	select * from salesdetail
+  </select>
+  
+  
+  
+  <select id="findBySSId" resultMap="BaseResultMap">
+  	SELECT * FROM salesdetail sd WHERE EXISTS(
+	SELECT s.sdid FROM sales s
+	WHERE sd.sdid=s.sdid and s.sdid=#{SDID}
+	)
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

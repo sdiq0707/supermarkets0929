@@ -5,6 +5,14 @@
     <id column="PSID" property="psid" jdbcType="INTEGER" />
     <result column="PSName" property="psname" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <select id="findProductspecificationById" resultType="Productspecification">
+  		select * from Productspecification ps where exists(
+  			select sd.PSID  from Salesdetail sd
+  			where sd.PSID=ps.PSID and sd.PSID=#{ps.PSID}
+  		)
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

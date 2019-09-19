@@ -66,9 +66,8 @@
 				<th>销售编号</th>
 				<th>销售总金额</th>
 				<th>销售日期</th>
-				<th>操作员编号</th>
-				<th>销售细节编号</th>
-				<th>会员编号</th>
+				<th>会员姓名</th>
+				<th>操作员</th>
 				<th>备注</th>
 				<th>
 				修改
@@ -82,9 +81,8 @@
 				<td>{{item.saleid}}</td>
 				<td>{{item.saleallprice}}</td>
 				<td>{{item.saledate|df}}</td>
-				<td>{{item.userid}}</td>
-				<td>{{item.sdid}}</td>
-				<td>{{item.vipid}}</td>
+				<td>{{item.vip.vipname}}</td>
+				<td>{{item.userinfo.username}}</td>
 				<td>{{item.saleothers}}</td>
 				<td>
 				<a @click="updateUI(item)">修改</a>
@@ -150,14 +148,20 @@
 					});
 				},
 				updateUI(item){
-					this.u_saleid=item.saleid,
-					this.u_saleallprice=item.saleallprice,
-					this.u_saledate=item.saledate,
-					this.u_userid=item.userid,
-					this.u_sdid=item.sdid,
-					this.u_vipid=item.vipid,
-					this.u_saleothers=item.saleothers,
-					this.flag=true
+					this.u_saleid=item.saleid;
+					this.u_saleallprice=item.saleallprice;
+					
+					var dd=new Date(item.saledate);
+					var y=dd.getFullYear();
+					var m=(dd.getMonth()+1+"").padStart(2,'0');
+					var d=(dd.getDate()+"").padStart(2,'0');
+					this.u_saledate=`${y}/${m}/${d}`;
+					
+					this.u_userid=item.userid;
+					this.u_sdid=item.sdid;
+					this.u_vipid=item.vipid;
+					this.u_saleothers=item.saleothers;
+					this.flag=true;
 					
 				},
 				update(){

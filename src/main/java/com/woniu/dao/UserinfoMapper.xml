@@ -8,6 +8,14 @@
     <result column="salt" property="salt" jdbcType="VARCHAR" />
     <result column="staffID" property="staffid" jdbcType="INTEGER" />
   </resultMap>
+  
+    <select id="findByUserId" resultMap="BaseResultMap">
+	  	SELECT * from userinfo u where exists(
+	  		select s.userID from sales s
+	  		where s.userID=u.userID and s.userID=#{userID}
+	  	)
+ 	 </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

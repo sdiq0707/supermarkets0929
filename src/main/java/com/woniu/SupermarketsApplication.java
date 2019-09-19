@@ -13,5 +13,4 @@ public class SupermarketsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SupermarketsApplication.class, args);
 	}
-
 }
