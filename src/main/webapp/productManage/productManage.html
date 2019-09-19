@@ -24,7 +24,7 @@
 			商品售价:<input type="text" v-model="psellprice" /> <br>
 			库存数量:<input type="number" v-model="pstocknum" /> 
 			库存报警数:<input type="number" v-model="pcautionnum" /> 
-			商品保质期:<input type="number" v-model="pdeaddate" /> 
+			商品保质期:<input type="date" v-model="pdeaddate" /> 
 			规格:<input type="text" v-model="psid" /> <br>
 			备注:<input type="text" v-model="pothers" /> 
 			<button @click="save">添加</button><br>
@@ -45,7 +45,7 @@
 			商品售价:<input type="text" v-model="u_psellprice" /> <br>
 			库存数量:<input type="number" v-model="u_pstocknum" /> 
 			库存报警数:<input type="number" v-model="u_pcautionnum" /> 
-			商品保质期:<input type="number" v-model="u_pdeaddate" /> 
+			商品保质期:<input type="text" v-model="u_pdeaddate" /> 
 			规格:<input type="text" v-model="u_psid" /> <br>
 			备注:<input type="text" v-model="u_pothers" />
 			<button @click="update" >确认修改</button>
@@ -60,7 +60,7 @@
 <tr v-for="item in list">
    <td>{{item.productid}}<td/><td>{{item.pname}}<td/><td>{{item.ptypeid}}<td/><td>{{item.supplierid}}<td/><td>{{item.pcolor}}<td/>
    <td>{{item.pstate}}<td/><td>{{item.punit}}<td/><td>{{item.pimportprice}}<td/><td>{{item.psellprice}}<td/><td>{{item.pstocknum}}<td/><td>{{item.pcautionnum}}<td/>
-   <td>{{item.pdeaddate}}<td/><td>{{item.psid}}<td/><td>{{item.pothers}}<td/>				
+   <td>{{item.pdeaddate|df}}<td/><td>{{item.psid}}<td/><td>{{item.pothers}}<td/>				
    <td>
 					<a class="btn btn-warning" @click="del(item.productid)">删除</a>
 					|
@@ -69,7 +69,14 @@
 </tr>
 </table>
 </div>
-	<script>		
+	<script>	
+	Vue.filter("df", function(dateStr){
+		var dd = new Date(dateStr);
+		var y = dd.getFullYear();
+		var m = dd.getMonth() + 1;
+		var d = dd.getDate();
+		return `${y}-${m}-${d}`;
+	});
 		var vue = new Vue({
 			el:"#app",	
 			data: {
@@ -119,30 +126,35 @@
 				},
 				updateUI(item) {
 					this.flag = true;
-					this.u_productid=item.productid,
-					this.u_pname=item.pname,
-					this.u_ptypeid=item.ptypeid,
-					this.u_supplierid=item.supplierid,
-					this.u_pspecification=item.pspecification,
-					this.u_pcolor=item.pcolor,
-					this.u_pstate=item.pstate,
-					this.u_punit=item.punit,
-					this.u_pimportprice=item.pimportprice,
-					this.u_psellprice=item.psellprice,
-					this.u_pstocknum=item.pstocknum,
-					this.u_pcautionnum=item.pcautionnum,
-					this.u_pdeaddate=item.pdeaddate,
-					this.u_psid=item.psid,
-					this.u_pothers=item.pothers
+					this.u_productid=item.productid;
+					this.u_pname=item.pname;
+					this.u_ptypeid=item.ptypeid;
+					this.u_supplierid=item.supplierid;
+					this.u_pspecification=item.pspecification;
+					this.u_pcolor=item.pcolor;
+					this.u_pstate=item.pstate;
+					this.u_punit=item.punit;
+					this.u_pimportprice=item.pimportprice;
+					this.u_psellprice=item.psellprice;
+					this.u_pstocknum=item.pstocknum;
+					this.u_pcautionnum=item.pcautionnum;
+					var dd=new Date(item.pdeaddate);
+					var y = dd.getFullYear();
+					var m = (dd.getMonth() + 1 + "").padStart(2,'0');
+					var d = (dd.getDate() + "").padStart(2,'0');
+					this.u_pdeaddate=`${y}/${m}/${d}`;
+					this.u_psid=item.psid;
+					this.u_pothers=item.pothers;
 					
 				},
 				update() {
-					var json = {pname:this.u_pname,ptypeid:this.u_ptypeid,supplierid:this.u_supplierid,pspecification:this.u_pspecification,
+					var json = {productid:this.u_productid,pname:this.u_pname,ptypeid:this.u_ptypeid,supplierid:this.u_supplierid,pspecification:this.u_pspecification,
 							pcolor:this.u_pcolor,pstate:this.u_pstate,punit:this.u_punit,pimportprice:this.u_pimportprice,psellprice:this.u_psellprice,
 							pstocknum:this.u_pstocknum,u_pcautionnum:this.u_pcautionnum,
 							pdeaddate:this.u_pdeaddate,psid:this.u_psid,pothers:this.u_pothers,"_method":"put"};
 					this.$http.post("http://localhost:9999/products",json, {emulateJSON:true}).then(function() {
 						this.findAll();
+						this.flag=false;
 					});
 				}
 			}

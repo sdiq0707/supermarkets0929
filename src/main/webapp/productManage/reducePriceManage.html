@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>商品调价管理</title>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script> 
+<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="app">
+		<div>
+		<h4>添加调价信息</h4>
+			商品名(id模拟):<input type="text" v-model="productid" /> 
+			调价后价格:<input type="text" v-model="rchangeprice" /> 
+			调价后会员价格:<input type="text" v-model="rchangevipprice" /> 
+			起始日期:<input type="date" v-model="rsdate" /> 
+			终止日期:<input type="date" v-model="redate" /> 
+			备注:<input type="text" v-model="rothers" /> 
+			<button @click="save">添加</button>
+		</div>
+		<div id="updateDiv" v-show="flag">
+		 <h4>修改调价信息</h4>
+			<input type="hidden" v-model="u_rid" />
+			商品名(id模拟):<input type="text" v-model="u_productid" /> 
+			调价后价格:<input type="text" v-model="u_rchangeprice" /> 
+			调价后会员价格:<input type="text" v-model="u_rchangevipprice" /> 
+			起始日期:<input type="date" v-model="u_rsdate" /> 
+			终止日期:<input type="date" v-model="u_redate" /> 
+			备注:<input type="text" v-model="u_rothers" />
+			<button @click="update" >确认修改</button>
+		</div>
+		
+		<table class="table">
+			<tr>
+				<th>调价编号</th>
+				<th>商品id</th>
+				<th>调价后价格</th>
+				<th>调价后会员价格</th>
+				<th>起始日期</th>
+				<th>终止日期</th>
+				<th>备注</th>
+				<th>操作</th>
+			</tr>
+			<tr v-for="item in list">
+				<td>{{item.rid}}</td>
+				<td>{{item.productid}}</td>
+				<td>{{item.rchangeprice}}</td>
+				<td>{{item.rchangevipprice}}</td>
+				<td>{{item.rsdate|df}}</td>
+				<td>{{item.redate|df}}</td>
+				<td>{{item.rothers}}</td>
+				<td>
+					<a class="btn btn-warning" @click="del(item.rid)">删除</a>
+					|
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		Vue.filter("df", function(dateStr){
+			var dd = new Date(dateStr);
+			var y = dd.getFullYear();
+			var m = dd.getMonth() + 1;
+			var d = dd.getDate();
+			return `${y}-${m}-${d}`;
+		});
+		
+		var vue = new Vue({
+			el:"#app",	
+			data: {
+				productid:'',
+				rchangeprice:'',
+				rchangevipprice:'',
+				rsdate:'',
+				redate:'',
+				rothers:'',
+				u_rid:'',
+				u_productid:'',
+				u_rchangeprice:'',
+				u_rchangevipprice:'',
+				u_rsdate:'',
+				u_redate:'',
+				u_rothers:'',
+				flag:false,
+				list:''
+			},
+			created() {
+				this.findAll();
+			},
+			methods: {
+				findAll() {
+					this.$http.get("http://localhost:9999/reduceprices").then(function(result) {
+						this.list = result.body;
+					});
+				},
+				save() {
+					var json = {productid:this.productid, rchangeprice:this.rchangeprice, rchangevipprice:this.rchangevipprice,rsdate:this.rsdate,redate:this.redate,rothers:this.rothers};
+					this.$http.post("http://localhost:9999/reduceprices",json).then(function() {
+						this.findAll();
+						this.productid = this.rchangeprice = this.rchangevipprice = this.rsdate=this.redate=this.rothers='';
+					});
+				},
+				del(rid) {
+					this.$http.post("http://localhost:9999/reduceprices",{"rid":rid, "_method":"delete"}, {emulateJSON:true}).then(function() {
+						this.findAll();
+					});
+				},
+				updateUI(item) {
+					this.flag = true;
+					this.u_rid = item.rid;
+					this.u_productid=item.productid;
+					this.u_rchangeprice=item.rchangeprice;
+					this.u_rchangevipprice=item.rchangevipprice;
+					this.u_rsdate=item.rsdate;
+					this.u_redate=item.redate;
+					this.u_rothers=item.rothers;
+					// 笨办法
+					//var dd = new Date(item.birthday);
+					//var y = dd.getFullYear();
+					//var m = (dd.getMonth() + 1 + "").padStart(2,'0');
+					//var d = (dd.getDate() + "").padStart(2,'0');
+
+				},
+				update() {
+					var json = {rid:this.u_rid,productid:this.u_productid, rchangeprice:this.u_rchangeprice, rchangevipprice:this.u_rchangevipprice,rsdate:this.u_rsdate,redate:this.u_redate,rothers:this.u_rothers,"_method":"put"};
+					this.$http.post("http://localhost/users",json, {emulateJSON:true}).then(function() {
+						this.findAll();
+						this.flag=false;
+					});
+				}
+			}
+		});
+	</script>
+</body>
+</html>

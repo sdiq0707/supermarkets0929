@@ -34,6 +34,7 @@ public void delete(Integer productid) {
 @PutMapping
 @ResponseBody
 public void update(Product product) {
+	System.out.println(product);
 	service.update(product);
 }
 @GetMapping
