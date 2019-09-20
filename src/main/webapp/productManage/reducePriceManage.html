@@ -25,8 +25,8 @@
 			商品名(id模拟):<input type="text" v-model="u_productid" /> 
 			调价后价格:<input type="text" v-model="u_rchangeprice" /> 
 			调价后会员价格:<input type="text" v-model="u_rchangevipprice" /> 
-			起始日期:<input type="date" v-model="u_rsdate" /> 
-			终止日期:<input type="date" v-model="u_redate" /> 
+			起始日期:<input type="text" v-model="u_rsdate" /> 
+			终止日期:<input type="text" v-model="u_redate" /> 
 			备注:<input type="text" v-model="u_rothers" />
 			<button @click="update" >确认修改</button>
 		</div>
@@ -113,19 +113,22 @@
 					this.u_productid=item.productid;
 					this.u_rchangeprice=item.rchangeprice;
 					this.u_rchangevipprice=item.rchangevipprice;
-					this.u_rsdate=item.rsdate;
-					this.u_redate=item.redate;
+					var urs=new Date(item.rsdate);
+					var y = urs.getFullYear();
+					var m = (urs.getMonth() + 1 + "").padStart(2,'0');
+					var d = (urs.getDate() + "").padStart(2,'0');
+					this.u_rsdate=`${y}/${m}/${d}`;
+					var ure=new Date(item.redate);
+					var ye = ure.getFullYear();
+					var me = (ure.getMonth() + 1 + "").padStart(2,'0');
+					var de = (ure.getDate() + "").padStart(2,'0');
+					this.u_redate=`${ye}/${me}/${de}`;
 					this.u_rothers=item.rothers;
-					// 笨办法
-					//var dd = new Date(item.birthday);
-					//var y = dd.getFullYear();
-					//var m = (dd.getMonth() + 1 + "").padStart(2,'0');
-					//var d = (dd.getDate() + "").padStart(2,'0');
 
 				},
 				update() {
 					var json = {rid:this.u_rid,productid:this.u_productid, rchangeprice:this.u_rchangeprice, rchangevipprice:this.u_rchangevipprice,rsdate:this.u_rsdate,redate:this.u_redate,rothers:this.u_rothers,"_method":"put"};
-					this.$http.post("http://localhost/users",json, {emulateJSON:true}).then(function() {
+					this.$http.post("http://localhost:9999/reduceprices",json, {emulateJSON:true}).then(function() {
 						this.findAll();
 						this.flag=false;
 					});
