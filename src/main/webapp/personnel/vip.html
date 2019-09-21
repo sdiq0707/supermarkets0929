@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员表</title>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script> 
+<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="app">
+	
+	<div>                                                             
+             <fieldset>   
+                                                                  
+             <legend>添加会员</legend>  
+			  会员姓名<input type="text" v-model="vipname	 " />
+			  会员积分<input type="text" v-model="vipscore	 " />
+		                会员级别<input type="text" v-model="vippark	 " />
+		                联系电话<input type="text" v-model="vipphone	 " />
+		                办卡日期<input type="date" v-model="vipdate	 " />
+		                 状态    <input type="text"   v-model="status " />
+		        <button @click="save">添加</button><br>    
+            
+             </fieldset>                                                       
+	 </div>     
+	  
+	  
+	  
+	  
+	   <div id="updateDiv" v-show="flag">
+	
+	     会员姓名<input type="text" v-model="u_vipname	 " />               
+	     会员积分<input type="text" v-model="u_vipscore	 " />               
+	               会员级别<input type="text" v-model="u_vippark	 " />       
+	               联系电话<input type="text" v-model="u_vipphone	 " />   
+	               办卡日期<input type="text" v-model="u_vipdate	 " />       
+	                状态    <input type="text"   v-model="u_status " />    
+	   	<button  @click="update()">确认修改</button>
+	   		</div>
+	
+	
+	
+	<table class="table">
+			<tr>
+				<th>会员编号</th>
+				<th>会员姓名</th>
+				<th>会员积分</th>
+				<th>会员级别</th>
+				<th>联系电话</th>
+				<th>办卡日期</th>
+				<th>状态</th>
+			</tr>
+			<tr v-for="item in list">
+				<td>{{item.vipid	}}</td>
+				<td>{{item.vipname	}}</td>
+				<td>{{item.vipscore	}}</td>
+				<td>{{item.vippark	}}</td>
+				<td>{{item.vipphone	}}</td>
+				<td>{{item.vipdate|df}}</td>
+				<td>{{item.status	}}</td>
+				<td><a class="btn btn-warning" @click="del(item.vipid)">删除</a> |
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a></td>
+			</tr>
+		</table>
+	</div>
+	
+	<script>
+	
+	Vue.filter("df",function(dateStr){
+		var dd=new Date(dateStr);
+		var y=dd.getFullYear();
+		var m=dd.getMonth()+1;
+		var d=dd.getDate();
+		return `${y}/${m}/${d}`;
+	});
+	
+	var vue = new Vue({
+		el:"#app",
+
+		data:{
+			vipid:'',  
+			vipname:'',
+			vipscore:'',
+			vippark:'',
+			vipphone:'',
+			vipdate:'',
+			status:'',
+			list:'',
+			
+			u_vipid:'',  
+			u_vipname:'',
+			u_vipscore:'',
+			u_vippark:'',
+			u_vipphone:'',
+			u_vipdate:'',
+			u_status:'',
+			
+			flag:false
+		},
+		created() {
+			this.findAll();
+		},
+		methods:{
+			
+			
+			
+			
+			
+			save(){
+				var json={
+						   vipname	 :this.vipname	,
+						   vipscore	 :this.vipscore	,
+						   vippark	 :this.vippark	,
+						   vipphone	 :this.vipphone	,
+						   vipdate	 :this.vipdate	,
+				           status	 :this.status	
+						};
+					this.$http.post("http://localhost:9999/vips",json).then(function() {
+						this.findAll();
+				         this.vipname	=
+				         this.vipscore	=
+				         this.vippark	=
+				         this.vipphone	=
+				         this.vipdate	=
+				         this.status	='';
+					});                 
+				},
+				
+				
+				
+				del(vipid){
+					this.$http.post("http://localhost:9999/vips",{"vipid":vipid,"_method":"delete"},{emulateJSON:true}).then(function(){
+						this.findAll();
+					});
+				},
+			
+
+                 updateUI(item){
+				   this.u_vipid		 =item.vipid,
+                   this.u_vipname	 =item.vipname	,
+                   this.u_vipscore	 =item.vipscore	,
+                   this.u_vippark	 =item.vippark	,
+                   this.u_vipphone	 =item.vipphone	,
+                   this.u_vipdate	 =item.vipdate	,
+                   this.u_status	 =item.status	,
+			
+			     	this.flag=true   
+			     },                   
+			
+			     update(){    
+			             var json={
+			            		 vipid	 :  this.u_vipid, 
+			            		vipname	 : this.u_vipname	,
+			            		vipscore	 : this.u_vipscore	,
+			            		vippark	 : this.u_vippark	,
+			            		vipphone	 : this.u_vipphone	,
+			            		vipdate	 : this.u_vipdate	,
+			            		status	 : this.u_status	,
+			            		"_method":"put" 
+			             };
+			
+						this.$http.post("http://localhost:9999/vips",json,{emulateJSON:true}).then(function(){			
+			            	this.findAll();                                                                     
+			            	this.flag=false;                                                                    
+			     });
+			     },
+			findAll() {
+				this.$http.get("http://localhost:9999/vips").then(function(result) {
+					this.list = result.body;
+				});
+			}
+		}
+			
+		});
+	</script>
+</body>
+</html>

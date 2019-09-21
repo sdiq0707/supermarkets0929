@@ -46,7 +46,8 @@ public class VipServiceImpl implements IVipService {
 	@Override
 	public List<Vip> findAll() {
 		// TODO Auto-generated method stub
-		return mapper.selectByExample(null);
+		List<Vip> vip=mapper.selectByExample(null);
+		return vip;
 	}
 
 }
