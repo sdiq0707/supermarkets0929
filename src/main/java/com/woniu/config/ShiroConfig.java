@@ -21,7 +21,7 @@ public class ShiroConfig {
 		
 		DruidDataSource dataSource = new DruidDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/supermarket");
+		dataSource.setUrl("jdbc:mysql://192.168.7.213:3306/supermarket");
 		dataSource.setUsername("root");
 		dataSource.setPassword("123456");
 		

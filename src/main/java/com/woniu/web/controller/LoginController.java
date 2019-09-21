@@ -30,7 +30,7 @@ public class LoginController {
 		String path = "";
 		try {
 			subject.login(token);
-			path = "/index0.html";
+			path = "/admin/index.html";
 		} catch (AuthenticationException e) {
 			// 身份验证失败
 //			logger.info("用户身份验证失败");
