@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>进货信息表</title>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<!-- 发送ajax请求引用vue-resource $http-->
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="zlh">
+		<div>
+			<!-- 双向绑定vue中data属性 -->
+			进货日期:<input type="date" v-model="piindate" /> 
+			进货总价:<input type="text" v-model="piallprice" /> 
+			付款方式:<input type="text" v-model="pipayway" /> 
+			付款情况:<input type="text" v-model="pipay" /> 
+			操作员编号:<input type="text" v-model="userid" /> 
+			备注:<input type="text" v-model="piothers" /> 
+			<button @click="save()">添加</button>
+		</div>
+		<div id="updateDiv" v-show="flag">
+			<!-- v-show隐藏修改输入框flag是vue实例中的数据flag -->
+			<!-- 带u的变量指修改操作，双向绑定的是data里带u的属性 -->
+			<input type="hidden" v-model="u_piid" />
+			进货日期:<input type="text" v-model="u_piindate" /> 
+			进货总价:<input type="text" v-model="u_piallprice" /> 
+			付款方式:<input type="text" v-model="u_pipayway" /> 
+			付款情况:<input type="text" v-model="u_pipay" /> 
+			操作员编号:<input type="text" v-model="u_userid" /> 
+			备注:<input type="text" v-model="u_piothers" /> 
+			<button @click="update()">确认修改</button>
+		</div>
+		<!-- table样式是bootstap的样式 -->
+		<table class="table">
+			<tr>
+				<th>进货单编号</th>
+				<th>进货日期</th>
+				<th>进货总价</th>
+				<th>付款方式</th>
+				<th>付款情况</th>
+				<th>操作员编号</th>
+				<th>备注</th>
+				<th>操作</th>
+			</tr>
+			<tr v-for="item in list">
+				<td>{{item.piid}}</td>
+				<td>{{item.piindate|df}}</td>
+				<td>{{item.piallprice}}</td>
+				<td>{{item.pipayway}}</td>
+				<td>{{item.pipay}}</td>
+				<td>{{item.userid}}</td>
+				<td>{{item.piothers}}</td>
+				<td>
+					<a class="btn btn-warning" @click="del(item.piid)">删除</a>
+					|
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		/* 加一个全局的过滤器让日期回显 */
+		Vue.filter("df",function(dateStr){
+			var dd=new Date(dateStr);
+			var y=dd.getFullYear();
+			var m=dd.getMonth()+1;
+			var d=dd.getDate();
+			return `${y}/${m}/${d}`;
+		});
+		var vue = new Vue({
+			el:"#zlh",
+			data: {
+				piid:"",
+				piindate:"",
+				piallprice:"",
+				pipayway:"",
+				pipay:"",
+				userid:"",
+				piothers:"",
+				u_piid:"",
+				u_piindate:"",
+				u_piallprice:"",
+				u_pipayway:"",
+				u_pipay:"",
+				u_userid:"",
+				u_piothers:"",
+				flag:false,
+				list:""
+			},
+			created(){
+				this.findAll();
+			},
+			methods: {
+				findAll(){
+					/* .then(function(result){});用来接后台传来的Josn返回值,then是调用成功后的回调函数 */
+					this.$http.get("http://localhost:9999/productIns").then(function(result){
+						/* result将返回的数组给data里的list 然后v-for将data里的list循环*/
+						this.list=result.body;
+					});
+				},
+				save(){
+					/* 将前台接收到的数据要传给后台 */
+					var json={	
+							piindate:this.piindate,
+							piallprice:this.piallprice,
+							pipayway:this.pipayway,
+							pipay:this.pipay,
+							userid:this.userid,
+							piothers:this.piothers
+					};
+					this.$http.post("http://localhost:9999/productIns",json).then(function(){
+					/* 调用findAll方法将所有数据展示出来 进行添加操作*/
+					this.findAll();
+					/* 增加完成之后让文本框内容为空 */
+					this.piindate=this.piallprice=this.pipayway=this.pipay=this.userid=this.piothers="";
+					});
+				},
+				del(piid){
+					/* "_method":"delete"理解为将post转为delete，然后就能找到@DeleteMapping， 加上{emulateJSON:true}后台能够接到数据 */
+					this.$http.post("http://localhost:9999/productIns",{"piid":piid,"_method":"delete"},{emulateJSON:true}).then(function(){
+						this.findAll();
+					});
+				},
+				updateUI(item){
+					/*updateUI（）实现 当点击修改按钮的时候，数据能够显示在输入框里，数据回显，item参数是循环的当前对象 */
+					this.u_piid=item.piid,
+					/* var dd = new Date(item.piindate),
+					var y = dd.getFullYear(),
+					var m = (dd.getMonth() + 1 + "").padStart(2,'0'),
+					var d = (dd.getDate() + "").padStart(2,'0'), */
+					this.u_piindate=item.piindate,
+					this.u_piallprice=item.piallprice,
+					this.u_pipayway=item.pipayway,
+					this.u_pipay=item.pipay,
+					this.u_userid=item.userid,
+					this.u_piothers=item.piothers,
+					this.flag=true
+				},
+				update(){
+					var json={piid:this.u_piid,
+							piindate:this.u_piindate,
+							piallprice:this.u_piallprice,
+							pipayway:this.u_pipayway,
+							pipay:this.u_pipay,
+							userid:this.u_userid,
+							piothers:this.u_piothers,
+							"_method":"put"
+					};
+					this.$http.post("http://localhost:9999/productIns",json,{emulateJSON:true}).then(function(){
+						this.findAll();
+						/* 修改完以后输入框有隐藏 */
+						this.flag=false;
+					});
+				}
+				
+			}
+			
+		});
+	</script>
+</body>
+</html>

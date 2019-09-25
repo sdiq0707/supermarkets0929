@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.woniu.dao.SalesMapper" >
+  <resultMap id="BaseResultMap" type="com.woniu.domain.Sales" >
+    <id column="saleID" property="saleid" jdbcType="INTEGER" />
+    <result column="saleAllPrice" property="saleallprice" jdbcType="REAL" />
+    <result column="saleDate" property="saledate" jdbcType="DATE" />
+    <result column="userID" property="userid" jdbcType="INTEGER" />
+    <result column="SDID" property="sdid" jdbcType="INTEGER" />
+    <result column="VIPID" property="vipid" jdbcType="INTEGER" />
+    <result column="saleOthers" property="saleothers" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap type="com.woniu.domain.Sales" id="sss" extends="BaseResultMap">
+  	<collection property="userinfo" column="userID" select="com.woniu.dao.UserinfoMapper.findByUserId" />
+  	<collection property="salesdetail" column="SDID" select="com.woniu.dao.SalesdetailMapper.findBySSId"/>
+  	<collection property="vip" column="VIPID" select="com.woniu.dao.VipMapper.findByVipId"></collection>
+  </resultMap>
+    <select id="selectFindAll" resultMap="sss">
+  		select * from sales
+  </select>
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    saleID, saleAllPrice, saleDate, userID, SDID, VIPID, saleOthers
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.domain.SalesExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sales
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sales
+    where saleID = #{saleid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sales
+    where saleID = #{saleid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.woniu.domain.SalesExample" >
+    delete from sales
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.woniu.domain.Sales" >
+    insert into sales (saleID, saleAllPrice, saleDate, 
+      userID, SDID, VIPID, 
+      saleOthers)
+    values (#{saleid,jdbcType=INTEGER}, #{saleallprice,jdbcType=REAL}, #{saledate,jdbcType=DATE}, 
+      #{userid,jdbcType=INTEGER}, #{sdid,jdbcType=INTEGER}, #{vipid,jdbcType=INTEGER}, 
+      #{saleothers,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.woniu.domain.Sales" >
+    insert into sales
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="saleid != null" >
+        saleID,
+      </if>
+      <if test="saleallprice != null" >
+        saleAllPrice,
+      </if>
+      <if test="saledate != null" >
+        saleDate,
+      </if>
+      <if test="userid != null" >
+        userID,
+      </if>
+      <if test="sdid != null" >
+        SDID,
+      </if>
+      <if test="vipid != null" >
+        VIPID,
+      </if>
+      <if test="saleothers != null" >
+        saleOthers,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="saleid != null" >
+        #{saleid,jdbcType=INTEGER},
+      </if>
+      <if test="saleallprice != null" >
+        #{saleallprice,jdbcType=REAL},
+      </if>
+      <if test="saledate != null" >
+        #{saledate,jdbcType=DATE},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="sdid != null" >
+        #{sdid,jdbcType=INTEGER},
+      </if>
+      <if test="vipid != null" >
+        #{vipid,jdbcType=INTEGER},
+      </if>
+      <if test="saleothers != null" >
+        #{saleothers,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.woniu.domain.SalesExample" resultType="java.lang.Integer" >
+    select count(*) from sales
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sales
+    <set >
+      <if test="record.saleid != null" >
+        saleID = #{record.saleid,jdbcType=INTEGER},
+      </if>
+      <if test="record.saleallprice != null" >
+        saleAllPrice = #{record.saleallprice,jdbcType=REAL},
+      </if>
+      <if test="record.saledate != null" >
+        saleDate = #{record.saledate,jdbcType=DATE},
+      </if>
+      <if test="record.userid != null" >
+        userID = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.sdid != null" >
+        SDID = #{record.sdid,jdbcType=INTEGER},
+      </if>
+      <if test="record.vipid != null" >
+        VIPID = #{record.vipid,jdbcType=INTEGER},
+      </if>
+      <if test="record.saleothers != null" >
+        saleOthers = #{record.saleothers,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sales
+    set saleID = #{record.saleid,jdbcType=INTEGER},
+      saleAllPrice = #{record.saleallprice,jdbcType=REAL},
+      saleDate = #{record.saledate,jdbcType=DATE},
+      userID = #{record.userid,jdbcType=INTEGER},
+      SDID = #{record.sdid,jdbcType=INTEGER},
+      VIPID = #{record.vipid,jdbcType=INTEGER},
+      saleOthers = #{record.saleothers,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.woniu.domain.Sales" >
+    update sales
+    <set >
+      <if test="saleallprice != null" >
+        saleAllPrice = #{saleallprice,jdbcType=REAL},
+      </if>
+      <if test="saledate != null" >
+        saleDate = #{saledate,jdbcType=DATE},
+      </if>
+      <if test="userid != null" >
+        userID = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="sdid != null" >
+        SDID = #{sdid,jdbcType=INTEGER},
+      </if>
+      <if test="vipid != null" >
+        VIPID = #{vipid,jdbcType=INTEGER},
+      </if>
+      <if test="saleothers != null" >
+        saleOthers = #{saleothers,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where saleID = #{saleid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.woniu.domain.Sales" >
+    update sales
+    set saleAllPrice = #{saleallprice,jdbcType=REAL},
+      saleDate = #{saledate,jdbcType=DATE},
+      userID = #{userid,jdbcType=INTEGER},
+      SDID = #{sdid,jdbcType=INTEGER},
+      VIPID = #{vipid,jdbcType=INTEGER},
+      saleOthers = #{saleothers,jdbcType=VARCHAR}
+    where saleID = #{saleid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>商品类型管理</title>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script> 
+<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="app">
+	<div> 
+	<h4>添加商品类型</h4>
+	<br>
+		<div>
+			类型名称:<input type="text" v-model="ptypename" /> 
+			<button @click="save">添加</button>
+		</div>
+		<br><br>
+	</div>
+		<div id="updateDiv" v-show="flag">
+		<h4>类型修改</h4><br>
+			<input type="hidden" v-model="u_ptypeid" />
+			ptypename:<input type="text" v-model="u_ptypename" /> 
+			<button @click="update" >确认修改</button>
+		</div>
+		
+		<table class="table">
+			<tr>
+				<th>ptypeid</th>
+				<th>ptypename</th>
+				<th>操作</th>
+			</tr>
+			<tr v-for="item in list">
+				<td>{{item.ptypeid}}</td>
+				<td>{{item.ptypename}}</td>
+				<td>
+					<a class="btn btn-warning" @click="del(item.ptypeid)">删除</a>
+					|
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script>	
+		var vue = new Vue({
+			el:"#app",	
+			data: {
+				ptypename:'',
+				u_ptypeid:'',
+				u_ptypename:'',
+				flag:false,
+				list:''
+			},
+			created() {
+				this.findAll();
+			},
+			methods: {
+				findAll() {
+					this.$http.get("http://localhost:9999/producttypes").then(function(result) {
+						this.list = result.body;
+					});
+				},
+				save() {
+					var json = {ptypename:this.ptypename};
+					this.$http.post("http://localhost:9999/producttypes",json).then(function() {
+						this.findAll();
+						this.ptypename ="";
+					});
+				},
+				del(ptypeid) {
+					alert(111);
+					this.$http.post("http://localhost:9999/producttypes",{"ptypeid":ptypeid, "_method":"delete"}, {emulateJSON:true}).then(function() {
+						this.findAll();
+					});
+				},
+				updateUI(item) {
+					this.flag = true;
+					this.u_ptypeid = item.ptypeid;
+					this.u_ptypename=item.ptypename;
+					
+				},
+				update() {
+					var json = {ptypeid:this.u_ptypeid,ptypename:this.u_ptypename,"_method":"put"};
+					this.$http.post("http://localhost:9999/producttypes",json, {emulateJSON:true}).then(function() {
+						this.findAll();
+						this.u_ptypeid = '';
+						this.u_ptypename='';
+						this.flag=false;
+					});
+				}
+			}
+		});
+	</script>
+</body>
+</html>
