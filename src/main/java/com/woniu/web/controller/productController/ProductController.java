@@ -29,12 +29,12 @@ public void save(@RequestBody Product product) {
 @DeleteMapping
 @ResponseBody
 public void delete(Integer productid) {
+	System.out.println(productid);
 	service.delete(productid);
 }
 @PutMapping
 @ResponseBody
 public void update(Product product) {
-	System.out.println(product);
 	service.update(product);
 }
 @GetMapping
@@ -46,5 +46,11 @@ public List<Product> findAll(){
 @ResponseBody
 public Product findOne(@PathVariable Integer productid) {
 	return service.select(productid);
+}
+@PutMapping("updown")
+@ResponseBody
+public void upAndDown(Integer productid) {
+	System.out.println(productid);
+	service.upAndDown(productid);
 }
 }

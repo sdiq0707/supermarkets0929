@@ -1,0 +1,293 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> - 商品信息管理 - </title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="../favicon.ico"> 
+    <link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../css/animate.css" rel="stylesheet">
+    <link href="../css/style.css?v=4.1.0" rel="stylesheet">
+    <style type="text/css">
+    td {  
+      text-align: center;
+    }
+    </style>
+</head>
+
+<body class="gray-bg">
+    <div id="app" class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>商品</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-3">
+                            <div class="input-group"> 
+                            <select v-model="keystr" style="background-color: #EBEFF9 ;font-size: 4;width: 150px;height:35px;">
+                                <option value="">请选择搜索关键字</option>
+                                <option value="pname">按商品名</option>
+                                <option value="ptypename">按商品类型</option>
+                                <option value="sname">按供应商</option>
+                                <option value="pstate">按商品状态</option>
+                                </select>
+                            </div>
+                                <div class="input-group">
+                                    <input type="text" placeholder="请输入关键词" class="input-sm form-control" v-model="valuestr"> <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-primary" @click="select()"> 搜索</button> </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                     <!-- 商品添加按钮 -->
+                       <button type="button" class="btn btn-outline btn-default" @click="saveUI()">
+                                        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                        <a @click="saveUI()" style="margin-top:50px;">添加商品</a>
+                    </div>
+                                    </button>
+               <!-- 商品添加模块 -->
+                    <div v-show="flagsave">
+		<fieldset>
+		<legend>添加商品</legend>
+			商品名:<input type="text" v-model="pname" /> 
+			商品类别:<input type="text" v-model="ptypeid" /> 
+			供应商:<input type="text" v-model="supplierid" /> 
+			商品颜色:<input type="text" v-model="pcolor" /> <br>
+			商品状态:<input type="text" v-model="pstate" /><span v-show="stateflag"><font color="red">商品状态不能为空（在售/已下架）</font></span> 
+			商品单位:<input type="text" v-model="punit" /> 
+			<input type="hidden" v-model="pspecification" value="null">
+			商品进价:<input type="text" v-model="pimportprice" /> 
+			商品售价:<input type="text" v-model="psellprice" /> <br>
+			库存数量:<input type="number" v-model="pstocknum" /> 
+			库存报警数:<input type="number" v-model="pcautionnum" /> 
+			商品保质期:<input type="date" v-model="pdeaddate" /> 
+			规格:<input type="text" v-model="psid" /> <br>
+			商品:<input type="text" v-model="pothers" /> 
+			<button @click="save">添加</button><br>
+		</fieldset>
+		</div>
+		 <!-- 商品信息修改模块-->
+		<div id="updateDiv" v-show="flag">
+		<fieldset> 
+		<legend>商品信息修改</legend>
+			<input type="hidden" v-model="u_productid" />
+			商品名:<input type="text" v-model="u_pname" /> 
+			商品类别:<input type="text" v-model="u_ptypeid" /> 
+			供应商:<input type="text" v-model="u_supplierid" /> 
+			<input type="hidden" v-model="u_pspecification" value="null">
+			商品颜色:<input type="text" v-model="u_pcolor" /> <br>
+			商品状态:<input type="text" v-model="u_pstate" /><span v-show="stateflag"><font color="red">商品状态不能为空（在售/已下架）</font></span> 
+			商品单位:<input type="text" v-model="u_punit" /> 
+			商品进价:<input type="text" v-model="u_pimportprice" /> 
+			商品售价:<input type="text" v-model="u_psellprice" /> <br>
+			库存数量:<input type="number" v-model="u_pstocknum" /> 
+			库存报警数:<input type="number" v-model="u_pcautionnum" /> 
+			商品保质期:<input type="text" v-model="u_pdeaddate" /> 
+			规格:<input type="text" v-model="u_psid" /> <br>
+			备注:<input type="text" v-model="u_pothers" />
+			<button @click="update" >确认修改</button>
+			<fieldset/>
+		</div>
+                    <div class="ibox-content">
+                        <table class="table table-striped table-hover  ">
+                            <thead >
+								<tr class="alert ">
+									<th>商品编号</th>
+									<th>商品名称<th/>
+									<th>商品类别编码<th/ >
+									<th>供应商编号<th/>
+                                    <th>商品颜色<th/>                     
+                                    <th>商品状态<th/>
+                                    <th>商品单位<th/>
+                                    <th>商品进价<th/>
+                                    <th>商品售价<th/>
+                                    <th>库存数量<th/>
+                                    <th>库存报警数<th/>
+                                    <th>商品保质期</th>
+                                    <th>规格编号</th>
+                                    <th>备注</th>
+                                    <th>&nbsp;&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="item in list">
+									<td>
+                                         {{item.productid}}
+                                    </td>
+									<td>{{item.pname}}<td/>
+									<td>{{item.ptypeid}}<td/>
+									<td>{{item.supplierid}}<td/>
+									<td>{{item.pcolor}}<td/>
+                                    <td bgcolor="#F3D3E2" align="center"><font color="red" size="4">{{item.pstate}}</font><td/>
+                                    <td>{{item.punit}}<td/>
+                                    <td>{{item.pimportprice}}<td/>
+                                    <td>{{item.psellprice}}<td/>
+                                    <td>{{item.pstocknum}}<td/>
+                                    <td>{{item.pcautionnum}}<td/>
+                                    <td>{{item.pdeaddate|df}}<td/>
+                                     <td>{{item.psid}}<td/>
+                                     <td>{{item.pothers}}<td/>				
+   <td>
+                    <a class="btn btn-primary" @click="upAndDown(item.productid)">上/下架</a>
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a>
+   </td>
+								</tr>
+							</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="../js/jquery.min.js?v=2.1.4"></script>
+    <script src="../js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+	<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+
+    <!-- Peity -->
+    <script src="../js/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="../js/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="../js/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="../js/demo/peity-demo.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        
+        Vue.filter("df",function(dateStr){
+			var dd=new Date(dateStr);
+			var y=dd.getFullYear();
+			var m=dd.getMonth()+1;
+			var d=dd.getDate();
+			return `${y}-${m}-${d}`;
+		});
+		var vue=new Vue({
+			el:"#app",
+			data:{
+				pname:'',ptypeid:'',supplierid:'',pspecification:'',pcolor:'',pstate:'',punit:'',pimportprice:'',psellprice:'',pstocknum:'',pcautionnum:'',pdeaddate:'',psid:'',pothers:'',
+				u_productid:'',
+				u_pname:'',
+				u_ptypeid:'',
+				u_supplierid:'',
+				u_pspecification:'',
+				u_pcolor:'',
+				u_pstate:'',
+				u_punit:'',
+				u_pimportprice:'',
+				u_psellprice:'',
+				u_pstocknum:'',
+				u_pcautionnum:'',
+				u_pdeaddate:'',
+				u_psid:'',
+				u_pothers:'',
+				list:"",
+				flagsave:false,
+				flag:false,
+				stateflag:false,
+				keystr:'',
+				valuestr:'',
+				params:{
+					checked:{}
+				}
+			},
+			created(){
+				this.findAll();
+			},
+			methods:{
+				findAll(){
+					this.$http.get("http://localhost:9999/products").then(function(result){
+						this.list=result.body;
+					});
+				},
+				del(id){
+					this.$http.post("http://localhost:9999/logs",{"logid":id,"_method":"delete"},{emulateJSON:true}).then(function(){
+						this.findAll();
+					});
+				},
+				saveUI(){
+					this.flagsave=true;
+				},
+				save() {
+					if(this.pstate==""||this.pstate==null){
+						this.stateflag=true;
+					}else{
+						this.stateflag=false;
+					var json={
+							pname:this.pname,ptypeid:this.ptypeid,supplierid:this.supplierid,pspecification:this.pspecification,
+							pcolor:this.pcolor,pstate:this.pstate,punit:this.punit,pimportprice:this.pimportprice,psellprice:this.psellprice,
+							pstocknum:this.pstocknum,pcautionnum:this.pcautionnum,
+							pdeaddate:this.pdeaddate,psid:this.psid,pothers:this.pothers};
+					this.$http.post("http://localhost:9999/products",json).then(function() {
+						this.findAll();
+						this.pname=this.ptypeid=this.supplierid=this.pspecification=this.pcolor=this.pstate=this.punit=this.pimportprice=this.psellprice=this.pstocknum=this.pcautionnum=this.pdeaddate=this.psid=this.pothers='';
+						this.flagsave=false;
+					});
+					}
+				},
+				updateUI(item) {
+					this.flag = true;
+					this.u_productid=item.productid;
+					this.u_pname=item.pname;
+					this.u_ptypeid=item.ptypeid;
+					this.u_supplierid=item.supplierid;
+					this.u_pspecification=item.pspecification;
+					this.u_pcolor=item.pcolor;
+					this.u_pstate=item.pstate;
+					this.u_punit=item.punit;
+					this.u_pimportprice=item.pimportprice;
+					this.u_psellprice=item.psellprice;
+					this.u_pstocknum=item.pstocknum;
+					this.u_pcautionnum=item.pcautionnum;
+					var dd=new Date(item.pdeaddate);
+					var y = dd.getFullYear();
+					var m = (dd.getMonth() + 1 + "").padStart(2,'0');
+					var d = (dd.getDate() + "").padStart(2,'0');
+					this.u_pdeaddate=`${y}/${m}/${d}`;
+					this.u_psid=item.psid;
+					this.u_pothers=item.pothers;
+					
+				},
+				update() {
+					if(this.u_pstate==null||this.u_pstate==""){
+						this.stateflag=true;
+					}else{
+						this.stateflag=false;
+					var json = {productid:this.u_productid,pname:this.u_pname,ptypeid:this.u_ptypeid,supplierid:this.u_supplierid,pspecification:this.u_pspecification,
+							pcolor:this.u_pcolor,pstate:this.u_pstate,punit:this.u_punit,pimportprice:this.u_pimportprice,psellprice:this.u_psellprice,
+							pstocknum:this.u_pstocknum,u_pcautionnum:this.u_pcautionnum,
+							pdeaddate:this.u_pdeaddate,psid:this.u_psid,pothers:this.u_pothers,"_method":"put"};
+					this.$http.post("http://localhost:9999/products",json, {emulateJSON:true}).then(function() {
+						this.findAll();
+						this.flag=false;
+					});
+					}
+				},
+				upAndDown(productid) {
+					this.$http.post("http://localhost:9999/products/updown",{"productid":productid, "_method":"put"}, {emulateJSON:true}).then(function() {
+						this.findAll();
+					});
+				}
+			}
+		});
+		
+    </script>
+
+</body>
+</html>

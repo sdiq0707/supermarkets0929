@@ -9,5 +9,6 @@ public interface IProductService {
     void delete(Integer productid);
     void update(Product product);
     Product select(Integer productid);
+    void upAndDown(Integer productid);
     List<Product> select();
 }
