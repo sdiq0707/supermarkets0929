@@ -2,6 +2,9 @@ package com.woniu.dao;
 
 import com.woniu.domain.Salesdetail;
 import com.woniu.domain.SalesdetailExample;
+import com.woniu.domain.Triple;
+
+import java.math.BigDecimal;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,4 +33,8 @@ public interface SalesdetailMapper {
     
     //级联查询
     List<Salesdetail> findAllSaleDetail();
+    
+    //统计商品销售数量和金额
+    List<Triple<String, BigDecimal, Double>> findAllBySales();
+    
 }

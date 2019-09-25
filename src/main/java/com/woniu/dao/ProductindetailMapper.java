@@ -32,11 +32,11 @@ public interface ProductindetailMapper {
     int updateByPrimaryKey(Productindetail record);
     
     
-    
+    //统计供货商的供货次数和金额
     List<Triple<String,Long, Double>> findAllByNull();
-    
+    //统计某个供货商的详细供货信息
     List<Triple<String,BigDecimal, Double>> findAllBySname(String sname);
-    
+    //统计所有商品的进货件数与总金额
     List<Triple<String,BigDecimal, Double>> findAllByProduct();
     
     
