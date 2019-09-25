@@ -9,6 +9,40 @@
     <result column="PimportPrice" property="pimportprice" jdbcType="REAL" />
     <result column="SupplierID" property="supplierid" jdbcType="INTEGER" />
   </resultMap>
+  
+  <resultMap type="com.woniu.domain.Triple" id="aa">
+	<result column="a" property="a" jdbcType="VARCHAR" />
+	<result column="b" property="b" jdbcType="INTEGER" />
+	<result column="c" property="c" jdbcType="DOUBLE" />
+  </resultMap>
+  
+  <select id="findAllByNull" resultMap="aa">
+		SELECT s.`SName` AS
+		a,COUNT(*) AS b,SUM(PimportPrice) AS c FROM productindetail p,supplier
+		s WHERE p.`SupplierID` = s.`SupplierID` GROUP BY s.`SName` ORDER BY c
+	</select>
+
+	<select id="findAllBySname" parameterType="java.lang.String"
+		resultMap="aa">
+		SELECT
+		p.`PName` as
+		a,SUM(PIInQuantiy) as b,SUM(PimportPrice)
+		as c FROM productindetail p
+		WHERE p.`SupplierID` =
+		(
+		SELECT
+		s.`SupplierID` FROM supplier s WHERE
+		s.`SName` = #{sname}
+		) GROUP BY
+		p.`PName` ORDER BY SUM(PimportPrice)
+	</select>
+
+	<select id="findAllByProduct" resultMap="aa">
+		SELECT
+		p.`PName` as a,SUM(P.`PIInQuantiy`) as b,SUM(p.`PimportPrice`) as c FROM
+		productindetail p GROUP BY p.`PName`ORDER BY SUM(p.`PimportPrice`)
+	</select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

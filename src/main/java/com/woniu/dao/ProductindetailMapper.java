@@ -2,6 +2,9 @@ package com.woniu.dao;
 
 import com.woniu.domain.Productindetail;
 import com.woniu.domain.ProductindetailExample;
+import com.woniu.domain.Triple;
+
+import java.math.BigDecimal;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,4 +30,14 @@ public interface ProductindetailMapper {
     int updateByPrimaryKeySelective(Productindetail record);
 
     int updateByPrimaryKey(Productindetail record);
+    
+    
+    
+    List<Triple<String,Long, Double>> findAllByNull();
+    
+    List<Triple<String,BigDecimal, Double>> findAllBySname(String sname);
+    
+    List<Triple<String,BigDecimal, Double>> findAllByProduct();
+    
+    
 }

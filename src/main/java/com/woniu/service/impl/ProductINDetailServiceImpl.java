@@ -1,5 +1,6 @@
 package com.woniu.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.woniu.dao.ProductindetailMapper;
 import com.woniu.domain.Productindetail;
+import com.woniu.domain.Triple;
 import com.woniu.service.IProductINDetailService;
 
 @Service
@@ -43,5 +45,21 @@ public class ProductINDetailServiceImpl implements IProductINDetailService {
 	public List<Productindetail> findAll() {
 		return productindetailMapper.selectByExample(null);
 	}
+	
+	@Override
+	public List<Triple<String,Long, Double>> findAllByNull() {
+		return productindetailMapper.findAllByNull();
+	}
+
+	@Override
+	public List<Triple<String, BigDecimal, Double>> findAllBySname(String sname) {
+		return productindetailMapper.findAllBySname(sname);
+	}
+
+	@Override
+	public List<Triple<String, BigDecimal, Double>> findAllByProduct() {
+		return productindetailMapper.findAllByProduct();
+	}
+
 
 }
