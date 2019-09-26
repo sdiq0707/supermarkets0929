@@ -57,9 +57,9 @@ public class ShiroConfig {
 		// 支持权限查询(必须配置该项，否则无法判断用户拥有的角色是否拥有某个权限)
 		// 这样才能，根据用户去查询用户的权限。
 		realm.setPermissionsLookupEnabled(true);
-		//密码加密配置
+		// 密码加密配置
 		realm.setCredentialsMatcher(credentialsMatcher());
-		// 必须加这个配置，否则对客户端传来的明文密码进行解密
+		// 必须加这个配置，否则对客户端传来的明文密码不进行解密
 		realm.setSaltStyle(SaltStyle.COLUMN);
 		
 		return realm;

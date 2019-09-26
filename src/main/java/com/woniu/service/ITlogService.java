@@ -12,7 +12,7 @@ public interface ITlogService {
 	void save(Tlog tlog);
 	void delete(Integer logid);
 	void update(Tlog tlog);
-	List<Tlog> findAll();
+	List<Tlog> findAll(Integer currPage,Integer pageSize);
 	Tlog findOne(Integer logid);
-	
+	Integer count();
 }

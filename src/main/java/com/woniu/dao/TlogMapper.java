@@ -1,11 +1,19 @@
 package com.woniu.dao;
 
-import com.woniu.domain.Tlog;
-import com.woniu.domain.TlogExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
+import com.woniu.domain.Tlog;
+import com.woniu.domain.TlogExample;
+
 public interface TlogMapper {
+	
+	List<Tlog> findAllBySql(Map<String, Integer> data);
+	
+	//-----------------------
+	
     int countByExample(TlogExample example);
 
     int deleteByExample(TlogExample example);

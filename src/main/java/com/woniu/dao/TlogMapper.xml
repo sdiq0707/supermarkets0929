@@ -12,6 +12,17 @@
     <result column="message" property="message" jdbcType="VARCHAR" />
     <result column="roleID" property="roleid" jdbcType="INTEGER" />
   </resultMap>
+  
+  <!-- ==============分页查询============ -->
+  <select id="findAllBySql" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from tlog limit #{currIndex},#{pageSize}
+  </select>
+  
+  <!-- ================================== -->
+  
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

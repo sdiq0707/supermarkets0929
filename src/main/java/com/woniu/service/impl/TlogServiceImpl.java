@@ -1,6 +1,8 @@
 package com.woniu.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,13 +35,24 @@ public class TlogServiceImpl implements ITlogService {
 	}
 
 	@Override
-	public List<Tlog> findAll() {
-		return tlogMapper.selectByExample(null);
+	public List<Tlog> findAll(Integer currPage,Integer pageSize) {
+
+		Map<String, Integer> data = new HashMap<>();
+        data.put("currIndex", (currPage-1)*pageSize);
+        data.put("pageSize", pageSize);
+        
+		return tlogMapper.findAllBySql(data);
 	}
 
 	@Override
 	public Tlog findOne(Integer logid) {
 		return tlogMapper.selectByPrimaryKey(logid);
+	}
+
+	@Override
+	public Integer count() {
+		Integer countByExample = tlogMapper.countByExample(null);
+		return countByExample;
 	}
 
 }

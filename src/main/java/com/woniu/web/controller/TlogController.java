@@ -1,12 +1,15 @@
 package com.woniu.web.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,13 +24,18 @@ public class TlogController {
 	private ITlogService service;
 	
 	@PostMapping("save")
-	public String save(Tlog tlog) {
+	public String save(@RequestBody Tlog tlog) {
 		service.save(tlog);
-		return null;
+		return "保存成功！";
 	}
 	@DeleteMapping("delete")
 	public String delete(Integer logid) {
 		service.delete(logid);
+		return "删除成功";
+	}
+	@PostMapping("delAll")
+	public String delAll(List<Integer> params) {
+		System.out.println("TlogController.delAll()"+120+params);
 		return "删除成功";
 	}
 	@PutMapping("update")
@@ -39,9 +47,17 @@ public class TlogController {
 	public Tlog findOne(Integer logid) {
 		return service.findOne(logid);
 	}
-	@GetMapping("findAll")
-	public List<Tlog> findAll() {
-		return service.findAll();
+	@PostMapping("findAll")
+	public Map<String, Object> findAll(Integer currPage,Integer pageSize) {
+		Map<String,Object> map = new HashMap<>();
+		
+		List<Tlog> list = service.findAll(currPage,pageSize);
+		Integer count = service.count();
+		
+		map.put("list", list);
+		map.put("count", count);
+		
+		return map;
 	}
 
 }
