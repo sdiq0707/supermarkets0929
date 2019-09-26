@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>供应商信息表</title>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<!-- 发送ajax请求引用vue-resource $http-->
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="zlh">
+		<div>
+			<!-- 双向绑定vue中data属性 -->
+			供应商名称:<input type="text" v-model="sname" /> 
+			联系人姓名:<input type="text" v-model="slinkman" /> 
+			联系电话:<input type="text" v-model="sphone" /> 
+			供应商地址:<input type="text" v-model="saddress" />
+			开户银行:<input type="text" v-model="sbank" /> 
+			银行账号:<input type="text" v-model="saccountid" /> 
+			备注:<input type="text" v-model="sothers" />  
+			<button @click="save()">添加</button>
+		</div>
+		<div id="updateDiv" v-show="flag">
+			<!-- v-show隐藏修改输入框flag是vue实例中的数据flag -->
+			<!-- 带u的变量指修改操作，双向绑定的是data里带u的属性，u指update -->
+			<input type="hidden" v-model="u_supplierid" />
+			供应商名称:<input type="text" v-model="u_sname" /> 
+			联系人姓名:<input type="text" v-model="u_slinkman" /> 
+			联系电话:<input type="text" v-model="u_sphone" /> 
+			供应商地址:<input type="text" v-model="u_saddress" />
+			开户银行:<input type="text" v-model="u_sbank" /> 
+			银行账号:<input type="text" v-model="u_saccountid" /> 
+			备注:<input type="text" v-model="u_sothers" /> 
+			<button @click="update()">确认修改</button>
+		</div>
+		<!-- table样式是bootstap的样式 -->
+		<table class="table">
+			<tr>
+				<th>供应商编号</th>
+				<th>供应商名称</th>
+				<th>联系人姓名</th>
+				<th>联系电话</th>
+				<th>供应商地址</th>
+				<th>开户银行</th>
+				<th>银行账号</th>
+				<th>备注</th>
+				<th>操作</th>
+			</tr>
+			<tr v-for="item in list">
+				<td>{{item.supplierid}}</td>
+				<td>{{item.sname}}</td>
+				<td>{{item.slinkman}}</td>
+				<td>{{item.sphone}}</td>
+				<td>{{item.saddress}}</td>
+				<td>{{item.sbank}}</td>
+				<td>{{item.saccountid}}</td>
+				<td>{{item.sothers}}</td>
+				<td>
+					<a class="btn btn-warning" @click="del(item.supplierid)">删除</a>
+					|
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		var vue = new Vue({
+			el:"#zlh",
+			data: {
+				supplierid:"",
+				sname:"",
+				slinkman:"",
+				sphone:"",
+				saddress:"",
+				sbank:"",
+				saccountid:"",
+				sothers:"",
+				u_supplierid:"",
+				u_sname:"",
+				u_slinkman:"",
+				u_sphone:"",
+				u_saddress:"",
+				u_sbank:"",
+				u_saccountid:"",
+				u_sothers:"",
+				flag:false,
+				list:""
+			},
+			created(){
+				this.findAll();
+			},
+			methods: {
+				findAll(){
+					/* .then(function(result){});用来接后台传来的Josn返回值,then是调用成功后的回调函数 */
+					this.$http.get("http://localhost:9999/suppliers/findAll").then(function(result){
+						/* result将返回的数组给data里的list 然后v-for将data里的list循环*/
+						this.list=result.body;
+					});
+				},
+				save(){
+					/* 将前台接收到的数据要传给后台 */
+					var json={	
+							sname:this.sname,
+							slinkman:this.slinkman,
+							sphone:this.sphone,
+							saddress:this.saddress,
+							sbank:this.sbank,
+							saccountid:this.saccountid,
+							sothers:this.sothers
+					};
+					this.$http.post("http://localhost:9999/suppliers/save",json).then(function(){
+					/* 调用findAll方法将所有数据展示出来 进行添加操作*/
+					this.findAll();
+					/* 增加完成之后让文本框内容为空 */
+					this.sname=this.slinkman=this.sphone=this.saddress=this.sbank=this.saccountid=this.sothers="";
+					});
+				},
+				del(supplierid){
+					/* "_method":"delete"理解为将post转为delete，然后就能找到@DeleteMapping， 加上{emulateJSON:true}后台能够接到数据 */
+					this.$http.post("http://localhost:9999/suppliers/del",{"supplierid":supplierid,"_method":"delete"},{emulateJSON:true}).then(function(){
+						this.findAll();
+					});
+				},
+				updateUI(item){
+					/*updateUI（）实现 当点击修改按钮的时候，数据能够显示在输入框里，数据回显，item参数是循环的当前对象 */
+					this.u_supplierid=item.supplierid,
+					this.u_sname=item.sname,
+					this.u_slinkman=item.slinkman,
+					this.u_sphone=item.sphone,
+					this.u_saddress=item.saddress,
+					this.u_sbank=item.sbank,
+					this.u_saccountid=item.saccountid,
+					this.u_sothers=item.sothers,
+					this.flag=true
+				},
+				update(){
+					var json={
+							supplierid:this.u_supplierid,
+							sname:this.u_sname,
+							slinkman:this.u_slinkman,
+							sphone:this.u_sphone,
+							saddress:this.u_saddress,
+							sbank:this.u_sbank,
+							saccountid:this.u_saccountid,
+							sothers:this.u_sothers,
+							"_method":"put"
+					};
+					this.$http.post("http://localhost:9999/suppliers/update",json,{emulateJSON:true}).then(function(){
+						this.findAll();
+						/* 修改完以后输入框有隐藏 */
+						this.flag=false;
+					});
+				}
+				
+			}
+			
+		});
+	</script>
+</body>
+</html>

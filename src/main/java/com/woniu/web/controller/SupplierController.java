@@ -20,27 +20,27 @@ import com.woniu.service.ISupplierService;
 public class SupplierController {
 	@Autowired
 	private ISupplierService supplierService;
-	@PostMapping
+	@PostMapping("save")
 	public void save(@RequestBody Supplier supplier) {
 		supplierService.save(supplier);
 	}  
 
-	@DeleteMapping
+	@DeleteMapping("delete")
 	public void delete( int supplierid) {
 		supplierService.delete(supplierid);
 	}
 
-	@PutMapping
+	@PutMapping("update")
 	public void update(Supplier supplier) {
 		supplierService.update(supplier);
 	}
 
-	@GetMapping("/findOne/{supplierid}")
+	@GetMapping("findOne")
 	public void findOne(@PathVariable("supplierid") int supplierid) {
 		 supplierService.findOne(supplierid);
 	}
 
-	@GetMapping
+	@GetMapping("findAll")
 	public List<Supplier> findAll() {
 		return supplierService.findAll();
 	}

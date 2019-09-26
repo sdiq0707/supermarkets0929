@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.woniu.dao.SalesdetailMapper">
+	<resultMap id="BaseResultMap"
+		type="com.woniu.domain.Salesdetail">
+		<id column="SDID" property="sdid" jdbcType="INTEGER" />
+		<result column="ProductID" property="productid"
+			jdbcType="INTEGER" />
+		<result column="PName" property="pname" jdbcType="VARCHAR" />
+		<result column="saleQuantiy" property="salequantiy"
+			jdbcType="INTEGER" />
+		<result column="PSellPrice" property="psellprice"
+			jdbcType="REAL" />
+		<result column="PSID" property="psid" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap type="com.woniu.domain.Salesdetail"
+		id="OtherResultMap" extends="BaseResultMap">
+		<collection property="product" column="PSID"
+			select="com.woniu.dao.ProductMapper.findProductById"></collection>
+		<collection property="productspecification"
+			column="ProductID"
+			select="com.woniu.dao.ProductspecificationMapper.findProductspecificationById"></collection>
+	</resultMap>
+
+	<select id="findAllSaleDetail" resultMap="OtherResultMap"
+		resultType="com.woniu.domain.Salesdetail">
+		select * from salesdetail
+	</select>
+
+	<select id="findBySSId" resultMap="BaseResultMap">
+		SELECT * FROM salesdetail sd
+		WHERE EXISTS(
+		SELECT s.sdid FROM sales s
+		WHERE sd.sdid=s.sdid and
+		s.sdid=#{SDID}
+		)
+	</select>
+
+	<resultMap type="com.woniu.domain.Triple" id="aa">
+		<result column="a" property="a" jdbcType="VARCHAR" />
+		<result column="b" property="b" jdbcType="INTEGER" />
+		<result column="c" property="c" jdbcType="DOUBLE" />
+	</resultMap>
+
+	<select id="findAllBySales" resultMap="aa">
+		SELECT s.`PName` as a,SUM(s.`saleQuantiy`) as
+		b,SUM(s.`PSellPrice`) as c FROM salesdetail s
+		GROUP BY s.`PName` ORDER
+		BY SUM(s.`PSellPrice`)
+	</select>
+
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		SDID, ProductID, PName, saleQuantiy, PSellPrice, PSID
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.woniu.domain.SalesdetailExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from salesdetail
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from salesdetail
+		where SDID = #{sdid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from salesdetail
+		where SDID =
+		#{sdid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="com.woniu.domain.SalesdetailExample">
+		delete from salesdetail
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.woniu.domain.Salesdetail">
+		insert into salesdetail (SDID,
+		ProductID, PName,
+		saleQuantiy, PSellPrice, PSID
+		)
+		values
+		(#{sdid,jdbcType=INTEGER}, #{productid,jdbcType=INTEGER},
+		#{pname,jdbcType=VARCHAR},
+		#{salequantiy,jdbcType=INTEGER},
+		#{psellprice,jdbcType=REAL}, #{psid,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.woniu.domain.Salesdetail">
+		insert into salesdetail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="sdid != null">
+				SDID,
+			</if>
+			<if test="productid != null">
+				ProductID,
+			</if>
+			<if test="pname != null">
+				PName,
+			</if>
+			<if test="salequantiy != null">
+				saleQuantiy,
+			</if>
+			<if test="psellprice != null">
+				PSellPrice,
+			</if>
+			<if test="psid != null">
+				PSID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="sdid != null">
+				#{sdid,jdbcType=INTEGER},
+			</if>
+			<if test="productid != null">
+				#{productid,jdbcType=INTEGER},
+			</if>
+			<if test="pname != null">
+				#{pname,jdbcType=VARCHAR},
+			</if>
+			<if test="salequantiy != null">
+				#{salequantiy,jdbcType=INTEGER},
+			</if>
+			<if test="psellprice != null">
+				#{psellprice,jdbcType=REAL},
+			</if>
+			<if test="psid != null">
+				#{psid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="com.woniu.domain.SalesdetailExample"
+		resultType="java.lang.Integer">
+		select count(*) from salesdetail
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update salesdetail
+		<set>
+			<if test="record.sdid != null">
+				SDID = #{record.sdid,jdbcType=INTEGER},
+			</if>
+			<if test="record.productid != null">
+				ProductID = #{record.productid,jdbcType=INTEGER},
+			</if>
+			<if test="record.pname != null">
+				PName = #{record.pname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.salequantiy != null">
+				saleQuantiy = #{record.salequantiy,jdbcType=INTEGER},
+			</if>
+			<if test="record.psellprice != null">
+				PSellPrice = #{record.psellprice,jdbcType=REAL},
+			</if>
+			<if test="record.psid != null">
+				PSID = #{record.psid,jdbcType=INTEGER},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update salesdetail
+		set SDID = #{record.sdid,jdbcType=INTEGER},
+		ProductID = #{record.productid,jdbcType=INTEGER},
+		PName =
+		#{record.pname,jdbcType=VARCHAR},
+		saleQuantiy =
+		#{record.salequantiy,jdbcType=INTEGER},
+		PSellPrice =
+		#{record.psellprice,jdbcType=REAL},
+		PSID =
+		#{record.psid,jdbcType=INTEGER}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.woniu.domain.Salesdetail">
+		update salesdetail
+		<set>
+			<if test="productid != null">
+				ProductID = #{productid,jdbcType=INTEGER},
+			</if>
+			<if test="pname != null">
+				PName = #{pname,jdbcType=VARCHAR},
+			</if>
+			<if test="salequantiy != null">
+				saleQuantiy = #{salequantiy,jdbcType=INTEGER},
+			</if>
+			<if test="psellprice != null">
+				PSellPrice = #{psellprice,jdbcType=REAL},
+			</if>
+			<if test="psid != null">
+				PSID = #{psid,jdbcType=INTEGER},
+			</if>
+		</set>
+		where SDID = #{sdid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.woniu.domain.Salesdetail">
+		update salesdetail
+		set ProductID =
+		#{productid,jdbcType=INTEGER},
+		PName = #{pname,jdbcType=VARCHAR},
+		saleQuantiy = #{salequantiy,jdbcType=INTEGER},
+		PSellPrice =
+		#{psellprice,jdbcType=REAL},
+		PSID = #{psid,jdbcType=INTEGER}
+		where SDID
+		= #{sdid,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -21,27 +21,34 @@ public class ProductInController {
 	@Autowired
 	private IProductInService productInservice;
 	//添加  
-	@PostMapping
+	@PostMapping("save")     
 	public void save(@RequestBody Productin productin) {
 		productInservice.save(productin);
 	}
 	//删除
-	@DeleteMapping
+	@DeleteMapping("delete")
 	public void delete( int piid) {
 		productInservice.delete(piid);
 	}
+	//批量删除
+	@DeleteMapping("deleteAll")
+	public void deleteAll( int piid) {
+		productInservice.delete(piid);
+	}
+
+	
 	//修改  
-	@PutMapping
+	@PutMapping("update")
 	public void update(Productin productin) {
 		productInservice.update(productin);
 	}
 	//查询一个    
-	@GetMapping("/findOne/{piid}")
+	@GetMapping("findOne")
 	public void findOne(@PathVariable("piid") int piid) {
 		 productInservice.findOne(piid);
 	}
 	//查询所有
-	@GetMapping
+	@GetMapping("findAll")
 	public List<Productin> findAll() { 
 		
 		return productInservice.findAll();
