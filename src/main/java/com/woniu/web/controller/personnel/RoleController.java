@@ -32,9 +32,8 @@ public class RoleController {
 
 	@DeleteMapping
 	@ResponseBody
-	public String delete(@PathVariable("roleid") int roleid) {
+	public void delete(Integer roleid) {
 		roleService.delete(roleid);
-		return "true";
 	}
 
 	@PutMapping

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>权限表</title>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script> 
+<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="app">
+		
+		
+		
+             <div>                                                             
+             <fieldset>   
+                                                                  
+             <legend>添加员工</legend>     
+         	         权限名<input type="text" v-model="treename	 " />                           
+          	         权限描述<input type="text" v-model="tothers  	 " />                            
+          
+             	<button @click="save">添加</button><br>                         
+             
+             
+             </fieldset>                                                       
+	         </div>                                                            
+	
+	
+	    <!--改！！！！！！！！！！！！！！！！  -->                                             
+		<div id="updateDiv" v-show="flag">
+		         姓名<input type="text" v-model="u_treename	 " /> 
+	 	         性别<input type="text" v-model="u_tothers 	 " /> 
+			<button  @click="update()">确认修改</button>
+		</div>
+		
+		
+		
+		<table class="table">
+			<tr>
+				<th>权限编号</th>
+				<th>权限名</th>
+				<th>描述</th>
+			</tr>
+			<tr v-for="item in list">
+				<td>{{item.treeid}}</td>
+				<td>{{item.treename}}</td>
+				<td>{{item.tothers}}</td>
+				<td><a class="btn btn-warning" @click="del(item.treeid)">删除</a> |
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a></td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		
+		
+		var vue = new Vue({
+			el:"#app",	
+			data:{
+				treeid:'',
+				treename:'',
+				tothers:'',
+				flag:false,
+				//修改和增加按钮切换
+				list:'',
+				u_treeid:'',
+				u_treename:'',
+				u_tothers:'',
+				flag:false	
+				
+			},
+			created() {
+				this.findAll();
+			},
+			methods: {
+		                   
+		           save() {                                                                                                                                                                                                                  
+		           	var json={                                                                                                                                                                                                    
+		           			treename	  :this.treename	   ,       
+		           			treeid		  :this.treeid		   ,   
+		           			tothers   :this.tothers    , };                                                                                                                                        
+		           	this.$http.post("http://localhost:9999/trees",json).then(function() {                                                                                                                                      
+		           		this.findAll();                          
+		           		    this.treename	   =
+		          			this.tothers='';   
+		           	
+		           	});                                                                                                                                                                                                           
+		           },                                                                                                                                                                                                                
+			
+		      /*      
+		        findOne(staffid){
+		        	   this.$http.get("http://localhost:9999/staffs"),{"staffid":staffid},{emulateJSON:true}).then(function(result){
+		        		   this.message=result.body;
+		        	   })
+		           }   
+		            */
+		
+		
+		
+		
+				findAll() {
+					this.$http.get("http://localhost:9999/trees").then(function(result) {
+						this.list = result.body;
+					});
+				},
+				del(treeid){
+					this.$http.post("http://localhost:9999/trees",{"treeid":treeid,"_method":"delete"},{emulateJSON:true}).then(function(){
+						this.findAll();
+					});
+				},
+				updateUI(item){
+					this.u_treeid		 =item.treeid,
+					this.u_treename	 =item.treename,
+					this.u_rothers   =item.rothers    ,
+					this.flag=true
+				},
+				update(){
+				var json={  treeid		  :this.u_treeid		   ,
+							treename	  :this.u_treename	   ,
+						    rothers   :this.u_rothers    ,
+							"_method":"put"
+					};
+					this.$http.post("http://localhost:9999/trees",json,{emulateJSON:true}).then(function(){
+						this.findAll();
+						this.flag=false;
+					});
+				}
+			}
+		});
+	</script>
+</body>
+</html>
