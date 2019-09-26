@@ -18,7 +18,7 @@ import com.woniu.service.ISupplierService;
 @RestController
 @RequestMapping("/suppliers")
 public class SupplierController {
-	@Autowired
+	@Autowired  
 	private ISupplierService supplierService;
 	@PostMapping("save")
 	public void save(@RequestBody Supplier supplier) {

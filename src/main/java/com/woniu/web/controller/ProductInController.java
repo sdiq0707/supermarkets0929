@@ -18,7 +18,7 @@ import com.woniu.service.IProductInService;
 @RestController
 @RequestMapping("/productIns")
 public class ProductInController {
-	@Autowired
+	@Autowired  
 	private IProductInService productInservice;
 	//添加  
 	@PostMapping("save")     

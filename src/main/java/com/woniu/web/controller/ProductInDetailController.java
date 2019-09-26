@@ -19,7 +19,7 @@ import com.woniu.service.IProductINDetailService;
 @RestController
 @RequestMapping("/productInDetails")
 public class ProductInDetailController {
-	@Autowired
+	@Autowired  
 	private IProductINDetailService productInDetailservice;
 
 	@PostMapping("save")  
