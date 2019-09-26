@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>角色表</title>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script> 
+<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="app">
+	
+	<div>                                                             
+             <fieldset>   
+                                                                  
+             <legend>添加员工</legend>     
+          	         角色名称<input type="text" v-model="rolename  	 " />                            
+           	         角色描述<input type="text" v-model="rothers		 " />                       
+             	<button @click="save">添加</button><br>                         
+             </fieldset>                                                       
+	         </div>                         
+	         
+	         <div id="updateDiv" v-show="flag">
+	           	角色名称<input type="text" v-model="u_rolename  	 " />                            
+           	         角色描述<input type="text" v-model="u_rothers		 " />  
+			<button  @click="update()">确认修改</button>
+		</div>
+	         
+	
+	<table class="table">
+			<tr>
+				<th>角色编号</th>
+				<th>角色名称</th>
+				<th>角色描述</th>
+			</tr>
+			<tr v-for="item in list">
+				<td>{{item.roleid}}</td>
+				<td>{{item.rolename}}</td>
+				<td>{{item.rothers}</td>
+				<td><a class="btn btn-warning" @click="del(item.roleid)">删除</a> |
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a></td>
+			</tr>
+		</table>
+	</div>
+	
+	<script>
+	
+	var vue = new Vue({
+		el:"#app",
+
+		data:{
+			roleid:'',  
+			rolename:'',
+			rothers:'',
+			
+			list:'',
+			
+			u_roleid:'',  
+			u_rolename:'',
+			u_rothers:'',
+			
+			
+			flag:false
+		},
+		created() {
+			this.findAll();
+		},
+		methods:{
+			findAll() {
+				this.$http.get("http://localhost:9999/roles").then(function(result) {
+					this.list = result.body;
+				});
+			},
+			 save() {                                                                                                                                                                                                                  
+	           	var json={
+	           			roleid  :this.roleid  ,
+	        			rolename:this.rolename,
+	        			rothers :this.rothers 
+	           	};
+	        	this.$http.post("http://localhost:9999/roles",json).then(function() {                                                                                                                                      
+	           		this.findAll();   
+	        		this.roleid  =
+	           		this.rolename=
+	           		this.rothers ="";
+	           		              
+		});
+			},
+			
+			del(roleid){
+				this.$http.post("http://localhost:9999/roles",{"roleid":roleid,"_method":"delete"},{emulateJSON:true}).then(function(){
+					this.findAll();
+				});
+			},
+			
+			
+			
+			
+			updateUI(item){
+				this.u_roleid   =item.roleid  ,
+				this.u_rolename =item.rolename,
+				this.u_rothers  =item.rothers ,
+				this.flag=true
+			},
+			update(){
+				var json={
+						roleid  :this.u_roleid   ,
+						rolename:this.u_rolename ,
+						rothers :this.u_rothers  ,
+						"_method":"put"
+				};
+				 this.$http.post("http://localhost:9999/roles",json,{emulateJSON:true}).then(function(){
+			     						this.findAll();
+			     						this.flag=false;
+			     					});
+			}
+		}
+			
+		});
+	</script>
+</body>
+</html>

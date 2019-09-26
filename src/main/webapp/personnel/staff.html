@@ -2,24 +2,62 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
 <title>员工表</title>
-<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
-<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script> 
-<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+<meta name="keywords" content="">     
+<meta name="description" content="">  
+<link rel="shortcut icon" href="../favicon.ico">                   
+<link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">    
+<link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">     
+<link href="../css/plugins/iCheck/custom.css" rel="stylesheet">    
+<link href="../css/animate.css" rel="stylesheet">                  
+<link href="../css/style.css?v=4.1.0" rel="stylesheet">            
+<style type="text/css">                                            
+td {                                                               
+  text-align: center;                                              
+}                                                                  
+</style>                                                           
 </head>
-<body>
-	<div id="app">
-		<div>
-		<form>
-		员工id：<input type="number" v-model="staffid"/>
-		<button @click="findOne(staffid)">查询</button>
-		</form>
+
+
+<body class="gray-bg">
+	<div id="app" class="wrapper wrapper-content animated fadeInRight">                                                                                      
+    <div class="row">                                                                                                                                    
+        <div class="col-sm-12">                                                                                                                          
+            <div class="ibox float-e-margins">                                                                                                           
+                <div class="ibox-title">                                                                                                                 
+                    <h5>员工</h5>                                                                                                                          
+                </div>                                                                                                                                   
+                <div class="ibox-content">                                                                                                               
+                    <div class="row">                                                                                                                    
+                        <div class="col-sm-3">                                                                                                           
+                        <div class="input-group">                                                                                                        
+                        <select v-model="keystr" style="background-color: #EBEFF9 ;font-size: 4;width: 150px;height:35px;">                              
+                            <option value="">请选择搜索关键字</option>                                                                                           
+                            <option value="staffname">按员工工号</option>                                                                                          
+                            </select>                                                                                                                    
+                        </div>                                                                                                                           
+                            <div class="input-group">                                                                                                    
+                                <input type="text" placeholder="请输入关键词" class="input-sm form-control" v-model="valuestr"> <span class="input-group-btn"> 
+                                    <button type="button" class="btn btn-sm btn-primary" @click="findOne()"> 搜索</button> </span>                          
+                            </div>                                                                                                                       
+                        </div>                                                                                                                           
+                    </div>                                                                                                                               
+                </div>                                                                                                                                   
+		
+		<div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">       
+  			 <button type="button" class="btn btn-outline btn-default" @click="saveUI()">     
+                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>     
+                    <a @click="saveUI()" style="margin-top:50px;">添加员工</a>          
+		</div>                                                                              
+                </button>                                                           
 		
 		
-		</div>
 		
-		
-             <div>                                                             
+             <div v-show="flagsave">                                                             
              <fieldset>   
                                                                   
              <legend>添加员工</legend>     
@@ -46,7 +84,9 @@
 	
 	    <!--改！！！！！！！！！！！！！！！！  -->                                             
 		<div id="updateDiv" v-show="flag">
-		         姓名<input type="text" v-model="u_staffname	 " /> 
+		     <fieldset>
+		     <legend>员工信息修改</legend>    
+		         姓名<input type="text" v-model="u_staffname	 " /> <br>
 	 	         性别<input type="text" v-model="u_staffsex  	 " /> 
       	         年龄<input type="text" v-model="u_staffage		 " /> 
 	   	         籍贯<input type="text" v-model="u_staffhome	 " /> 
@@ -60,11 +100,13 @@
 		编制日期<input type="text" v-model="u_staffenacttime " /> 
 		        备注<input type="text" v-model="u_staffothers    " /> 
 			<button  @click="update()">确认修改</button>
+			<fieldset/>
 		</div>
 		
 		
-		
-		<table class="table">
+		<div class="ibox-content">
+		<table class="table table-striped table-hover">
+			<thead >
 			<tr>
 				<th>员工编号</th>
 				<th>姓名</th>
@@ -82,6 +124,8 @@
 				<th>备注</th>
 
 			</tr>
+			</thead>
+			<tbody>
 			<tr v-for="item in list">
 				<td>{{item.staffid}}</td>
 				<td>{{item.staffname}}</td>
@@ -100,10 +144,41 @@
 				<td><a class="btn btn-warning" @click="del(item.staffid)">删除</a> |
 					<a class="btn btn-primary" @click="updateUI(item)">修改</a></td>
 			</tr>
+			</tbody>
 		</table>
-	</div>
+	                 </div>  
+	             </div>      
+	         </div>          
+	     </div>              
+	 </div>                  
+	
+	 <script src="../js/jquery.min.js?v=2.1.4"></script>                                         
+	 <script src="../js/bootstrap.min.js?v=3.3.6"></script>                                      
+	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>                           
+	<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>      
+	                                                                                             
+	 <!-- Peity -->                                                                              
+	 <script src="../js/plugins/peity/jquery.peity.min.js"></script>                             
+	 <!-- 自定义js -->                                                                              
+	 <script src="../js/content.js?v=1.0.0"></script>                                            
+	 <!-- iCheck -->                                                                             
+	 <script src="../js/plugins/iCheck/icheck.min.js"></script>                                  
+	 <!-- Peity -->                                                                              
+	 <script src="../js/demo/peity-demo.js"></script>                                            
+	
+	
 	<script>
-		Vue.filter("df",function(dateStr){
+		
+	
+	       $(document).ready(function () {                 
+	           $('.i-checks').iCheck({                     
+	               checkboxClass: 'icheckbox_square-green',
+	               radioClass: 'iradio_square-green',      
+	           });                                         
+	       });                                             
+	
+	
+	Vue.filter("df",function(dateStr){
 			var dd=new Date(dateStr);
 			var y=dd.getFullYear();
 			var m=dd.getMonth()+1;
@@ -114,6 +189,7 @@
 		var vue = new Vue({
 			el:"#app",	
 			data:{
+				id:'',
 				message:'',
 				staffid:'',
 				staffname:'',
@@ -130,8 +206,7 @@
 				staffenacttime:'',
 				staffothers:'',
 				flag:false,
-				//修改和增加按钮切换
-				flag2:false,
+				flagsave:false,
 				list:'',
 				u_staffid:'',
 				u_staffname:'',
@@ -154,7 +229,9 @@
 				this.findAll();
 			},
 			methods: {
-		                   
+				saveUI(){
+					this.flagsave=true;
+				},       
 		           save() {                                                                                                                                                                                                                  
 		           	var json={                                                                                                                                                                                                    
 		           			staffname	  :this.staffname	   ,       
@@ -187,17 +264,11 @@
 		           	        this.staffbegindate=
 		           	        this.staffenacttime=
 		          			this.staffothers='';   
-		           	
+		           		this.flagsave=false;
 		           	});                                                                                                                                                                                                           
 		           },                                                                                                                                                                                                                
 			
-		      /*      
-		        findOne(staffid){
-		        	   this.$http.get("http://localhost:9999/staffs"),{"staffid":staffid},{emulateJSON:true}).then(function(result){
-		        		   this.message=result.body;
-		        	   })
-		           }   
-		            */
+		     
 		
 		
 		
@@ -207,6 +278,22 @@
 						this.list = result.body;
 					});
 				},
+				
+				
+				
+				
+				
+				 findOne(staffid) {
+					alert(staffid);
+					this.$http.get("http://localhost:9999/staffs/",{staffid:staffid}).then(function(result) {
+						this.message = result.body;
+					});
+				}, 
+				
+				
+				
+				
+				
 				del(staffid){
 					this.$http.post("http://localhost:9999/staffs",{"staffid":staffid,"_method":"delete"},{emulateJSON:true}).then(function(){
 						this.findAll();
