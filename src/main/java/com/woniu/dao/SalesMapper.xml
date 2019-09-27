@@ -20,6 +20,10 @@
   		select * from sales
   </select>
   
+  <select id="saleStatistic">
+  	SELECT * FROM sales WHERE SUBSTR(saleDate,1,4) = '2019' AND SUBSTR(saleDate,6,2) = '08'
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
