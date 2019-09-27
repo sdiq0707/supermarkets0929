@@ -62,7 +62,7 @@ td {
 		                办卡日期<input type="date" v-model="vipdate	 " />
 		                 状态    <input type="text"   v-model="status " />
 		        <button @click="save">添加</button><br>    
-            
+                <button @click="cancel">取消</button><br>
              </fieldset>                                                       
 	 </div>     
 	  
@@ -97,7 +97,7 @@ td {
 			</tr>
 			</thead>
 			<tbody> 
-			<tr v-for="item in list">
+			<tr v-for="item in list.slice(start,end)">
 				<td>{{item.vipid	}}</td>
 				<td>{{item.vipname	}}</td>
 				<td>{{item.vipscore	}}</td>
@@ -113,7 +113,9 @@ td {
 	                 </div>   
              </div>       
          </div>           
-     </div>               
+     </div>
+     
+     <div id="pages"></div>                
  </div>                   
 	
 	 <script src="../../js/jquery.min.js?v=2.1.4"></script>                                    
@@ -128,15 +130,54 @@ td {
  <!-- iCheck -->                                                                        
  <script src="../../js/plugins/iCheck/icheck.min.js"></script>                             
  <!-- Peity -->                                                                         
- <script src="../../js/demo/peity-demo.js"></script>                                       
- 
+ <script src="../../js/demo/peity-demo.js"></script>
+ 	    <script src="../../layui/layui.js"></script>'                                                       
+   <script src="../../layui/layui.all.js"></script>                   
+	<!-- layerDate plugin javascript -->                                 
+	   <script src="../../js/plugins/layer/laydate/laydate.js"></script> 
+	
 	<script>
-	 $(document).ready(function () {                  
-	     $('.i-checks').iCheck({                      
-	         checkboxClass: 'icheckbox_square-green', 
-	         radioClass: 'iradio_square-green',       
-	     });                                          
-	 });                                              
+	    var cn=0;                                                                           	     
+	        $(document).ready(function () {                                                        
+	            $('.i-checks').iCheck({                                                            
+	                checkboxClass: 'icheckbox_square-green',                                       
+	                radioClass: 'iradio_square-green',                                             
+	            });                                                                                
+	            layui.laydate.render({                                                             
+	                elem: '#test29'                                                                
+	                ,theme: 'molv'                                                                 
+	              });                                                                              
+	            cutpage();                                                                         
+	        });                                                                                    
+	        function cutpage(){                                                             	     
+	  		 layui.use('laypage', function(){                                           	     
+	           	  var laypage = layui.laypage;                                              	 
+	           	  //执行一个laypage实例                                                           	 
+	           	  laypage.render({                                                          	 
+	           	    elem: 'pages' //注意，这里的 test1 是 ID，不用加 # 号                                    
+	           	    ,count: cn //数据总数，从服务端得到                                                	 
+	           	    ,limit:10,                                                              	 
+	           	     limits:[10,15,20,30,50],                                               	 
+	           	     grops:5,                                                               	 
+	           	     layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip'], 	 
+	           	     jump: function(obj){                                                   	 
+	                       var curr=obj.curr;//当前页                                          	     
+	                       var limit=obj.limit;//每页显示条数                                     	     
+	                       console.log(obj.curr+" "+obj.limit);                            	     
+	                            //请求当前页数据                                                  	     
+	                            vue.cutlist(curr,limit);                                           
+	   					}                                                                        
+	           	  });                                                                            
+	           	});                                                                              
+	  	}                                                                                        
+	                                                                                               
+	
+	
+	
+	
+	
+	
+	
 	 
 	
 	Vue.filter("df",function(dateStr){
@@ -169,12 +210,40 @@ td {
 			u_status:'',
 			
 			flag:false,
-			flagsave:false
+			flagsave:false,
+		
+			
+			start:0,         
+		    end:0,           
+		    keystr:'',       
+		    valuestr:'',     
+		    params:{         
+		    	checked:{}   
+		    }	             
+		
 		},
 		created() {
 			this.findAll();
 		},
 		methods:{
+				//分页                                          
+				cutlist(curr,limit){                          
+					if(cn==0){                                
+						this.start=0;                         
+						this.end=0;                           
+					}else{                                    
+					this.start=curr>1?((curr-1)*limit+1):0;   
+					var sumpage=Math.ceil(cn/limit);          
+					if(curr==sumpage){                        
+						if(sumpage!=0){                       
+						this.end=cn;                          
+						}                                     
+					}else{                                    
+					 this.end=curr*limit;                     
+					}                                         
+					}                                         
+				},                                            
+			
 			
 			saveUI(){               
 				this.flagsave=true; 
@@ -200,6 +269,10 @@ td {
 				         this.flagsave=false;
 					});                 
 				},
+				cancel(){                        
+				        	   this.flagsave =false; 
+				           },                        
+				                                     
 				
 				
 				
@@ -242,6 +315,8 @@ td {
 			findAll() {
 				this.$http.get("http://localhost:9999/vips").then(function(result) {
 					this.list = result.body;
+					cn=this.list.length; 
+				    cutpage();           
 				});
 			}
 		}

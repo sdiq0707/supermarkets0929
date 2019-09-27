@@ -10,3 +10,4 @@ src/test/**
 .settings
 .springBeans
 .sts4-cache
+/bin/

@@ -35,10 +35,10 @@ td {
                     <div class="row">                                                                                                                    
                         <div class="col-sm-3">                                                                                                           
                         <div class="input-group">                                                                                                        
-                        <select v-model="keystr" style="background-color: #EBEFF9 ;font-size: 4;width: 150px;height:35px;">                              
-                            <option value="">请选择搜索关键字</option>                                                                                           
-                            <option value="staffname">按员工工号</option>                                                                                          
-                            </select>                                                                                                                    
+                                                     
+                                                             
+                                                               
+                                                     
                         </div>                                                                                                                           
                             <div class="input-group">                                                                                                    
                                 <input type="text" placeholder="请输入关键词" class="input-sm form-control" v-model="valuestr"> <span class="input-group-btn"> 
@@ -108,7 +108,7 @@ td {
 		<div class="ibox-content">
 		<table class="table table-striped table-hover">
 			<thead >
-			<tr>
+			<tr class="alert ">
 				<th>员工编号</th>
 				<th>姓名</th>
 				<th>性别</th>
@@ -127,7 +127,7 @@ td {
 			</tr>
 			</thead>
 			<tbody>
-			<tr v-for="item in list">
+			<tr v-for="item in list.slice(start,end)">
 				<td>{{item.staffid}}</td>
 				<td>{{item.staffname}}</td>
 				<td>{{item.staffsex}}</td>
@@ -162,72 +162,53 @@ td {
 	<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>      
 	                                                                                             
 	 <!-- Peity -->                                                                              
-	 <script src="../js/plugins/peity/jquery.peity.min.js"></script>                             
+	 <script src="../../js/plugins/peity/jquery.peity.min.js"></script>                             
 	 <!-- 自定义js -->                                                                              
-	 <script src="../js/content.js?v=1.0.0"></script>                                            
+	 <script src="../../js/content.js?v=1.0.0"></script>                                            
 	 <!-- iCheck -->                                                                             
-	 <script src="../js/plugins/iCheck/icheck.min.js"></script>                                  
+	 <script src="../../js/plugins/iCheck/icheck.min.js"></script>                                  
 	 <!-- Peity -->                                                                              
-	 <script src="../js/demo/peity-demo.js"></script>                                            
-	    <script src="../layui/layui.js"></script>'                       
-  <script src="../layui/layui.all.js"></script>                     
+	 <script src="../../js/demo/peity-demo.js"></script>                                            
+	    <script src="../../layui/layui.js"></script>'                       
+  <script src="../../layui/layui.all.js"></script>                     
 <!-- layerDate plugin javascript -->                             
-   <script src="../js/plugins/layer/laydate/laydate.js"></script>   
+   <script src="../../js/plugins/layer/laydate/laydate.js"></script>   
 	
 	<script>
-	 $(document).ready(function () {                                                  	
-	     $('.i-checks').iCheck({                                                          
-	         checkboxClass: 'icheckbox_square-green',                                     
-	         radioClass: 'iradio_square-green',                                           
-	     });                                                                              
-	     layui.laydate.render({                                                           
-	         elem: '#test29'                                                              
-	         ,theme: 'molv'                                                               
-	       });                                                                            
-	     show.findAll(pagex,sizex);                                                       
-	  // 调用分页                                                                             
-	     toPage();                                                                        
-	 });                                                                              	
-	 var pagex = 1;                                                                   	
-	 var sizex = 5;                                                                   	
-	 var countx;                                                                      	
-	 function toPage(){                                                               	
-	 	// 分页完整功能                                                                    	
-	     layui.laypage.render({                                                       	
-	        elem: 'pagex'                                                             	
-	        ,count: 30                                                                	
-	       // ,theme: '#FF5722'                                                       	
-	        ,limit: 5                                                                 	
-	        ,limits: [5,7,10,15,25,30]                                                	
-	        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']    	
-	        ,jump: function(obj){                                                     	
-	      	  console.log(obj);                                                      	
-	      	                                                                         	
-			pagex = obj.curr;                                                        	
-			sizex = obj.limit;                                                       	
-			show.findAll(obj.curr,obj.limit);                                        	
-			                                                                         	
-			console.log(obj.curr + " " + obj.groups+" "+show.countx);                
-	        }                                                                         
-	      });                                                                         
-	 }                                                                                       
-                                                                                         
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
-	       
+	  var cn=0;                                                                           	
+	      $(document).ready(function () {                                                     
+	          $('.i-checks').iCheck({                                                         
+	              checkboxClass: 'icheckbox_square-green',                                    
+	              radioClass: 'iradio_square-green',                                          
+	          });                                                                             
+	          layui.laydate.render({                                                          
+	              elem: '#test29'                                                             
+	              ,theme: 'molv'                                                              
+	            });                                                                           
+	          cutpage();                                                                          
+	      });                                                                                 
+	      function cutpage(){                                                             	
+			 layui.use('laypage', function(){                                           	
+	         	  var laypage = layui.laypage;                                              	
+	         	  //执行一个laypage实例                                                           	
+	         	  laypage.render({                                                          	
+	         	    elem: 'pages' //注意，这里的 test1 是 ID，不用加 # 号                                    	
+	         	    ,count: cn //数据总数，从服务端得到                                                	
+	         	    ,limit:10,                                                              	
+	         	     limits:[10,15,20,30,50],                                               	
+	         	     grops:5,                                                               	
+	         	     layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip'], 	
+	         	     jump: function(obj){                                                   	
+	                     var curr=obj.curr;//当前页                                          	
+	                     var limit=obj.limit;//每页显示条数                                     	
+	                     console.log(obj.curr+" "+obj.limit);                            	
+	                          //请求当前页数据                                                  	
+	                          vue.cutlist(curr,limit);                                   
+	 					}                                                                  
+	         	  });                                                                      
+	         	});                                                                        
+    	}                                                                             
+	 
 	       
 	       
 	       Vue.filter("df",function(dateStr){
@@ -273,14 +254,41 @@ td {
 				u_staffidcard:'',
 				u_staffbegindate:'',
 				u_staffenacttime:'',
-				u_staffothers:''
-					
+				u_staffothers:'',
+				
+				start:0,
+				end:0,  
+				keystr:'',
+				valuestr:'',
+				params:{
+					checked:{}
+				}	
 				
 			},
 			created() {
 				this.findAll();
 			},
 			methods: {
+				//分页
+				cutlist(curr,limit){
+					if(cn==0){
+						this.start=0;
+						this.end=0;
+					}else{
+					this.start=curr>1?((curr-1)*limit+1):0;
+					var sumpage=Math.ceil(cn/limit);
+					if(curr==sumpage){
+						if(sumpage!=0){
+						this.end=cn;
+						}
+					}else{
+					 this.end=curr*limit;
+					}
+					}
+				}, 
+				
+				
+				//增
 				saveUI(){
 					this.flagsave=true;
 				},       
@@ -330,6 +338,8 @@ td {
 				findAll() {
 					this.$http.get("http://localhost:9999/staffs").then(function(result) {
 						this.list = result.body;
+						cn=this.list.length;
+						cutpage();          
 					});
 				},
 				
@@ -339,8 +349,10 @@ td {
 				
 				 findOne(staffid) {
 					alert(staffid);
-					this.$http.get("http://localhost:9999/staffs/",{staffid:staffid}).then(function(result) {
-						this.message = result.body;
+					this.$http.post("http://localhost:9999/staffs/findOne",{staffid:staffid}),{emulateJSON:true}).then(function(result) {
+						this.list = result.body;
+						cn=this.list.length;	
+					    						cutpage();
 					});
 				}, 
 				
