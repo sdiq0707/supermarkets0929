@@ -75,7 +75,7 @@
 		    <artifactId>shiro-all</artifactId>
 		    <version>1.4.1</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>

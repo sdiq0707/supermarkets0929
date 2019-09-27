@@ -44,7 +44,6 @@ public class LoginController {
 			map.put("user", subject.getPrincipal());
 		} catch (AuthenticationException e) {
 			
-//			logger.info("用户身份验证失败");
 			
 			path = "/index.html";
 			map.put("status", 500);	//失败码
