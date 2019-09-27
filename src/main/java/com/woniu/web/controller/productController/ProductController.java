@@ -24,7 +24,6 @@ public class ProductController {
 @PostMapping
 @ResponseBody()
 public void save(@RequestBody Product product) {
-	System.out.println(product);
 	service.save(product) ;
 }
 @DeleteMapping
