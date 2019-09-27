@@ -24,7 +24,6 @@ public class ProductController {
 @PostMapping
 @ResponseBody()
 public void save(@RequestBody Product product) {
-	System.out.println(product);
 	service.save(product) ;
 }
 @DeleteMapping
@@ -41,21 +40,17 @@ public void update(Product product) {
 @GetMapping
 @ResponseBody
 public List<Product> findAll(){
-	List<Product> list=service.select();
-	System.out.println(list.size());
-	return list;
+	return service.select();
+}
+@GetMapping(value="{productid}")
+@ResponseBody
+public Product findOne(@PathVariable Integer productid) {
+	return service.select(productid);
 }
 @PutMapping("updown")
 @ResponseBody
 public void upAndDown(Integer productid) {
 	System.out.println(productid);
 	service.upAndDown(productid);
-}
-@PostMapping("sosu")
-@ResponseBody
-public List<Product> sosu(String name) {
-	System.out.println(name);
-	List<Product> list=service.select(name);
-	return list;
 }
 }

@@ -1,15 +1,12 @@
 package com.woniu.service.impl;
  
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.woniu.dao.ProductinMapper;
 import com.woniu.domain.Productin;
-import com.woniu.domain.Tlog;
 import com.woniu.service.IProductInService;
 @Service
 public class ProductInServiceImpl implements IProductInService {
@@ -31,23 +28,8 @@ public class ProductInServiceImpl implements IProductInService {
 		return productinMapper.selectByPrimaryKey(piid);
 	}
 
-	/*
-	 * public List<Productin> findAll() { return
-	 * productinMapper.selectByExample(null); }
-	 */
-	@Override
-	public List<Productin> findAll(Integer currPage,Integer pageSize) {
+	public List<Productin> findAll() {
+		return productinMapper.selectByExample(null);
+	}
 
-		Map<String, Integer> data = new HashMap<>();
-        data.put("currIndex", (currPage-1)*pageSize);
-        data.put("pageSize", pageSize);
-        
-		return productinMapper.findAllBySql(data);
-	}
-	
-	@Override
-	public Integer count() {
-		Integer countByExample = productinMapper.countByExample(null);
-		return countByExample;
-	}
 }

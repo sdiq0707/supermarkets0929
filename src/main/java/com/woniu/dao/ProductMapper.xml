@@ -17,14 +17,6 @@
     <result column="PDeadDate" property="pdeaddate" jdbcType="DATE" />
     <result column="PSID" property="psid" jdbcType="INTEGER" />
     <result column="POthers" property="pothers" jdbcType="VARCHAR" />
-    <association property="supplier" javaType="Supplier">
-			<id property="supplierid" column="supplierid" />
-			<result property="sname" column="sname"/>
-	</association>
-	<association property="producttype" javaType="Producttype">
-			<id property="ptypeid" column="ptypeid" />
-			<result property="ptypename" column="ptypename"/>
-	</association>
   </resultMap>
   
 	<select id="findProductById" resultMap="ProductDetailMap">
@@ -37,17 +29,7 @@
 	<resultMap type="Product" id="ProductDetailMap" extends="BaseResultMap">
 		<collection property="producttype" column="PTypeID" select="com.woniu.dao.ProducttypeMapper.findProducttypeById"></collection>
 	</resultMap>
-	
-	<!-- 模糊查询 -->
-	<select id="findProductByKeyStr" resultMap="BaseResultMap">
-	<bind name="user_name" value="'%' + _name + '%'"/>
-     select p.*,pt.ptypename,s.sname 
-     from product p,producttype pt,supplier s
-     where pt.PTypeID=p.PTypeID and p.SupplierID=s.SupplierID 
-     and concat (PTypename,p.PName,s.SName) like #{user_name} order by p.productid asc
-	</select>
-	<!-- 模糊查询 -->
-	
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -111,9 +93,18 @@
     PSellPrice, PStockNum, PCautionNum, PDeadDate, PSID, POthers
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.domain.ProductExample" >
-   select p.*,pt.ptypename,s.sname 
-     from product p,producttype pt,supplier s
-     where pt.PTypeID=p.PTypeID and p.SupplierID=s.SupplierID order by p.productid asc
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 

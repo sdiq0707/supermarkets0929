@@ -16,6 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.woniu.domain.Tlog;
 import com.woniu.service.ITlogService;
 
+/* 
+ *  controller层的日志使用Log打印信息, service层的日志使用数据库记录操作日志
+ *	通过添加一个AOP切面，监控controller层的所有方法：
+ *	调用之前打印请求信息，包含URL,HTTP_METHOD,IP,CLASS_METHOD,ARGS；
+ *	在方法完成后，打印返回的请求结果，包含code, msg。
+*/
+
 @RestController		//@ResponseBody的作用：将目标方法的返回值自动转换成json格式，然后返回给前端
 @RequestMapping("/logs")
 public class TlogController {

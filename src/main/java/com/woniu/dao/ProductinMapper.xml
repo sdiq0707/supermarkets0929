@@ -10,17 +10,6 @@
     <result column="userID" property="userid" jdbcType="INTEGER" />
     <result column="PIOthers" property="piothers" jdbcType="VARCHAR" />
   </resultMap>
-  
-  <!-- ==============分页查询============ -->
-  <select id="findAllBySql" parameterType="java.util.Map" resultMap="BaseResultMap">
-  	select 
-  	<include refid="Base_Column_List" />
-  	from productin limit #{currIndex},#{pageSize}
-  </select>
-  
-  <!-- ================================== -->
-  
-  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

@@ -11,5 +11,4 @@ public interface IProductService {
     Product select(Integer productid);
     void upAndDown(Integer productid);
     List<Product> select();
-    List<Product> select(String name);
 }
