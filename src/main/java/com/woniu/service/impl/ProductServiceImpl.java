@@ -54,4 +54,10 @@ public class ProductServiceImpl implements IProductService {
 		update(product);
 	}
 
-}}
+}
+
+	@Override
+	public List<Product> select(String name) {
+		// TODO Auto-generated method stub
+		return mapper.findProductByKeyStr(name);
+	}}

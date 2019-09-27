@@ -40,17 +40,20 @@ public void update(Product product) {
 @GetMapping
 @ResponseBody
 public List<Product> findAll(){
-	return service.select();
-}
-@GetMapping(value="{productid}")
-@ResponseBody
-public Product findOne(@PathVariable Integer productid) {
-	return service.select(productid);
+	List<Product> list=service.select();
+	return list;
 }
 @PutMapping("updown")
 @ResponseBody
 public void upAndDown(Integer productid) {
 	System.out.println(productid);
 	service.upAndDown(productid);
+}
+@PostMapping("sosu")
+@ResponseBody
+public List<Product> sosu(String name) {
+	System.out.println(name);
+	List<Product> list=service.select(name);
+	return list;
 }
 }

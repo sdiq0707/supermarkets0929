@@ -12,6 +12,7 @@
     <link href="../css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="../css/animate.css" rel="stylesheet">
     <link href="../css/style.css?v=4.1.0" rel="stylesheet">
+     <link href="../layui/css/layui.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
     td {  
       text-align: center;
@@ -33,7 +34,7 @@
                             <div class="input-group"> 
                             <select v-model="keystr" style="background-color: #EBEFF9 ;font-size: 4;width: 150px;height:35px;">
                                 <option value="">请选择搜索关键字</option>
-                                <option value="pname">按商品名</option>
+                                <option value="pname" selected="selected">按商品名</option>
                                 <option value="ptypename">按商品类型</option>
                                 <option value="sname">按供应商</option>
                                 <option value="pstate">按商品状态</option>
@@ -117,16 +118,16 @@
                                     <th>&nbsp;&nbsp;</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr v-for="item in list">
+							<tbody >
+								<tr v-for="item in list" >
 									<td>
                                          {{item.productid}}
                                     </td>
 									<td>{{item.pname}}<td/>
-									<td>{{item.ptypeid}}<td/>
-									<td>{{item.supplierid}}<td/>
+									<td>{{item.producttype.ptypename}}<td/>
+									<td>{{item.supplier.sname}}<td/>
 									<td>{{item.pcolor}}<td/>
-                                    <td bgcolor="#F3D3E2" align="center"><font color="red" size="4">{{item.pstate}}</font><td/>
+                                    <td bgcolor="#F3D3E2" align="center"><font color="green" size="4">{{item.pstate}}</font><td/>
                                     <td>{{item.punit}}<td/>
                                     <td>{{item.pimportprice}}<td/>
                                     <td>{{item.psellprice}}<td/>
@@ -146,6 +147,7 @@
                 </div>
             </div>
         </div>
+        <div id="pages"></div>
     </div>
 
     <!-- 全局js -->
@@ -162,13 +164,24 @@
     <script src="../js/plugins/iCheck/icheck.min.js"></script>
     <!-- Peity -->
     <script src="../js/demo/peity-demo.js"></script>
+    <script src="../layui/layui.js"></script>'
+   <script src="../layui/layui.all.js"></script>
+	<!-- layerDate plugin javascript -->
+    <script src="../js/plugins/layer/laydate/laydate.js"></script>
+<!-- 分页 -->
 
+</body>
     <script>
+    var cn=0;
         $(document).ready(function () {
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
+            layui.laydate.render({
+                elem: '#test29'
+                ,theme: 'molv'
+              });
         });
         
         Vue.filter("df",function(dateStr){
@@ -181,6 +194,7 @@
 		var vue=new Vue({
 			el:"#app",
 			data:{
+				valuestr:'',
 				pname:'',ptypeid:'',supplierid:'',pspecification:'',pcolor:'',pstate:'',punit:'',pimportprice:'',psellprice:'',pstocknum:'',pcautionnum:'',pdeaddate:'',psid:'',pothers:'',
 				u_productid:'',
 				u_pname:'',
@@ -211,15 +225,44 @@
 				this.findAll();
 			},
 			methods:{
+				
+				cutpage(){
+					 layui.use('laypage', function(){
+		            	  var laypage = layui.laypage;
+		            	  //执行一个laypage实例
+		            	  laypage.render({
+		            	    elem: 'pages' //注意，这里的 test1 是 ID，不用加 # 号
+		            	    ,count: cn //数据总数，从服务端得到
+		            	    ,limit:10,
+		            	     limits:[10,15,20,30,50],
+		            	     grops:5,
+		            	     layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip'],
+		            	     jump: function(obj){
+                                console.log(obj);
+                                this.list;
+                    			console.log(this.list);
+		                      }
+		            	  });
+		            	});
+				},
 				findAll(){
 					this.$http.get("http://localhost:9999/products").then(function(result){
 						this.list=result.body;
+						cn=this.list.length;
+						this.cutpage();
 					});
 				},
-				del(id){
-					this.$http.post("http://localhost:9999/logs",{"logid":id,"_method":"delete"},{emulateJSON:true}).then(function(){
-						this.findAll();
+				select(){
+					if(this.valuestr!=''||this.valuestr!=null){
+						var json={name:this.valuestr};
+					this.$http.post("http://localhost:9999/products/sosu",json, {emulateJSON:true}).then(function(result){
+						this.list=result.body;
+						cn=this.list.length;
+						this.cutpage();
 					});
+					}else{
+						this.findAll();
+					}
 				},
 				saveUI(){
 					this.flagsave=true;
