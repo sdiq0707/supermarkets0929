@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员表</title>
+<meta name="keywords" content="">                               
+<meta name="description" content="">                            
+                                                                
+<link rel="shortcut icon" href="../favicon.ico">                
+<link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet"> 
+<link href="../../css/font-awesome.css?v=4.4.0" rel="stylesheet">  
+<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet"> 
+<link href="../../css/animate.css" rel="stylesheet">               
+<link href="../../css/style.css?v=4.1.0" rel="stylesheet">         
+<style type="text/css">                                         
+td {                                                            
+  text-align: center;                                           
+}                                                               
+</style>                                                        
+</head>
+
+<body class="gray-bg">                                                                                                                                    
+	<div id="app" class="wrapper wrapper-content animated fadeInRight">                                                                                   
+    <div class="row">                                                                                                                                     
+        <div class="col-sm-12">                                                                                                                           
+            <div class="ibox float-e-margins">                                                                                                            
+                <div class="ibox-title">                                                                                                                  
+                    <h5>员工</h5>                                                                                                                           
+                </div>                                                                                                                                    
+                <div class="ibox-content">                                                                                                                
+                    <div class="row">                                                                                                                     
+                        <div class="col-sm-3">                                                                                                            
+                        <div class="input-group">                                                                                                         
+                        <select v-model="keystr" style="background-color: #EBEFF9 ;font-size: 4;width: 150px;height:35px;">                               
+                            <option value="">请选择搜索关键字</option>                                                                                            
+                            <option value="staffname">按员工工号</option>                                                                                      
+                            </select>                                                                                                                     
+                        </div>                                                                                                                            
+                            <div class="input-group">                                                                                                     
+                                <input type="text" placeholder="请输入关键词" class="input-sm form-control" v-model="valuestr"> <span class="input-group-btn">  
+                                    <button type="button" class="btn btn-sm btn-primary" @click="findOne()"> 搜索</button> </span>                          
+                            </div>                                                                                                                        
+                        </div>                                                                                                                            
+                    </div>                                                                                                                                
+                </div>                                                                                                                                    
+	
+	<div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">       
+	 <button type="button" class="btn btn-outline btn-default" @click="saveUI()">   
+            <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>             
+            <a @click="saveUI()" style="margin-top:50px;">添加会员</a>                  
+</div>                                                                              
+        </button>                                                                   
+	
+	 <div v-show="flagsave"> 
+ 		<fieldset>                 
+                                                                  
+             <legend>添加会员</legend>  
+			  会员姓名<input type="text" v-model="vipname	 " />
+			  会员积分<input type="text" v-model="vipscore	 " />
+		                会员级别<input type="text" v-model="vippark	 " />
+		                联系电话<input type="text" v-model="vipphone	 " />
+		                办卡日期<input type="date" v-model="vipdate	 " />
+		                 状态    <input type="text"   v-model="status " />
+		        <button @click="save">添加</button><br>    
+            
+             </fieldset>                                                       
+	 </div>     
+	  
+	  
+	  
+	  
+	   <div id="updateDiv" v-show="flag">
+			<fieldset>
+			 <legend>会员信息修改</legend> 
+	     会员姓名<input type="text" v-model="u_vipname	 " />               
+	     会员积分<input type="text" v-model="u_vipscore	 " />               
+	               会员级别<input type="text" v-model="u_vippark	 " />       
+	               联系电话<input type="text" v-model="u_vipphone	 " />   
+	               办卡日期<input type="text" v-model="u_vipdate	 " />       
+	                状态    <input type="text"   v-model="u_status " />    
+	   	<button  @click="update()">确认修改</button>
+	   		</div>
+	
+	
+	
+	<div class="ibox-content">
+	  <table class="table table-striped table-hover">  
+	<thead >                                       
+			<tr>
+				<th>会员编号</th>
+				<th>会员姓名</th>
+				<th>会员积分</th>
+				<th>会员级别</th>
+				<th>联系电话</th>
+				<th>办卡日期</th>
+				<th>状态</th>
+			</tr>
+			</thead>
+			<tbody> 
+			<tr v-for="item in list">
+				<td>{{item.vipid	}}</td>
+				<td>{{item.vipname	}}</td>
+				<td>{{item.vipscore	}}</td>
+				<td>{{item.vippark	}}</td>
+				<td>{{item.vipphone	}}</td>
+				<td>{{item.vipdate|df}}</td>
+				<td>{{item.status	}}</td>
+				<td><a class="btn btn-warning" @click="del(item.vipid)">删除</a> |
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a></td>
+			</tr>
+			</tbody> 
+		</table>
+	                 </div>   
+             </div>       
+         </div>           
+     </div>               
+ </div>                   
+	
+	 <script src="../../js/jquery.min.js?v=2.1.4"></script>                                    
+ <script src="../../js/bootstrap.min.js?v=3.3.6"></script>                                 
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>                       
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>  
+                                                                                        
+ <!-- Peity -->                                                                         
+ <script src="../../js/plugins/peity/jquery.peity.min.js"></script>                        
+ <!-- 自定义js -->                                                                         
+ <script src="../../js/content.js?v=1.0.0"></script>                                       
+ <!-- iCheck -->                                                                        
+ <script src="../../js/plugins/iCheck/icheck.min.js"></script>                             
+ <!-- Peity -->                                                                         
+ <script src="../../js/demo/peity-demo.js"></script>                                       
+ 
+	<script>
+	 $(document).ready(function () {                  
+	     $('.i-checks').iCheck({                      
+	         checkboxClass: 'icheckbox_square-green', 
+	         radioClass: 'iradio_square-green',       
+	     });                                          
+	 });                                              
+	 
+	
+	Vue.filter("df",function(dateStr){
+		var dd=new Date(dateStr);
+		var y=dd.getFullYear();
+		var m=dd.getMonth()+1;
+		var d=dd.getDate();
+		return `${y}/${m}/${d}`;
+	});
+	
+	var vue = new Vue({
+		el:"#app",
+
+		data:{
+			vipid:'',  
+			vipname:'',
+			vipscore:'',
+			vippark:'',
+			vipphone:'',
+			vipdate:'',
+			status:'',
+			list:'',
+			
+			u_vipid:'',  
+			u_vipname:'',
+			u_vipscore:'',
+			u_vippark:'',
+			u_vipphone:'',
+			u_vipdate:'',
+			u_status:'',
+			
+			flag:false,
+			flagsave:false
+		},
+		created() {
+			this.findAll();
+		},
+		methods:{
+			
+			saveUI(){               
+				this.flagsave=true; 
+			},                      
+			
+			save(){
+				var json={
+						   vipname	 :this.vipname	,
+						   vipscore	 :this.vipscore	,
+						   vippark	 :this.vippark	,
+						   vipphone	 :this.vipphone	,
+						   vipdate	 :this.vipdate	,
+				           status	 :this.status	
+						};
+					this.$http.post("http://localhost:9999/vips",json).then(function() {
+						this.findAll();
+				         this.vipname	=
+				         this.vipscore	=
+				         this.vippark	=
+				         this.vipphone	=
+				         this.vipdate	=
+				         this.status	='';
+				         this.flagsave=false;
+					});                 
+				},
+				
+				
+				
+				del(vipid){
+					this.$http.post("http://localhost:9999/vips",{"vipid":vipid,"_method":"delete"},{emulateJSON:true}).then(function(){
+						this.findAll();
+					});
+				},
+			
+
+                 updateUI(item){
+				   this.u_vipid		 =item.vipid,
+                   this.u_vipname	 =item.vipname	,
+                   this.u_vipscore	 =item.vipscore	,
+                   this.u_vippark	 =item.vippark	,
+                   this.u_vipphone	 =item.vipphone	,
+                   this.u_vipdate	 =item.vipdate	,
+                   this.u_status	 =item.status	,
+			
+			     	this.flag=true   
+			     },                   
+			
+			     update(){    
+			             var json={
+			            		 vipid	 :  this.u_vipid, 
+			            		vipname	 : this.u_vipname	,
+			            		vipscore	 : this.u_vipscore	,
+			            		vippark	 : this.u_vippark	,
+			            		vipphone	 : this.u_vipphone	,
+			            		vipdate	 : this.u_vipdate	,
+			            		status	 : this.u_status	,
+			            		"_method":"put" 
+			             };
+			
+						this.$http.post("http://localhost:9999/vips",json,{emulateJSON:true}).then(function(){			
+			            	this.findAll();                                                                     
+			            	this.flag=false;                                                                    
+			     });
+			     },
+			findAll() {
+				this.$http.get("http://localhost:9999/vips").then(function(result) {
+					this.list = result.body;
+				});
+			}
+		}
+			
+		});
+	</script>
+</body>
+</html>
