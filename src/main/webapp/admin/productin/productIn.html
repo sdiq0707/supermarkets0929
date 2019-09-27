@@ -32,6 +32,8 @@
     <script src="../../js/demo/form-validate-demo.js"></script>
 	<!-- layui -->
 	<script src="../../layui/layui.all.js"></script>
+	<!-- layerDate plugin javascript -->
+    <script src="../../js/plugins/layer/laydate/laydate.js"></script>
 </head>
 <body class="gray-bg">
     <div id="show" class="wrapper wrapper-content animated fadeInRight">
@@ -65,7 +67,7 @@
                           <button type="button" class="btn btn-outline btn-default">
                                <i class="glyphicon glyphicon-heart" aria-hidden="true"></i>
                           </button>
-                          <button @click="delall(3)" type="button" class="btn btn-outline btn-default">
+                          <button  type="button" class="btn btn-outline btn-default">
                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                           </button>
                     </div>
@@ -73,7 +75,6 @@
                         <table class="table table-striped table-hover table-bordered ">
                             <thead >
 								<tr>
-									<!-- <th lay-data="{type:'checkbox', fixed: 'left'}"></th>  -->
 									<th><input type="checkbox" class="i-checks" name="input[]"></th>
 									<th>序号</th>
 									<th>进货单编号</th>
@@ -110,6 +111,13 @@
 									</td>
 								</tr>
 							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="12">
+										<div id="pagex" style="text-align:center"></div>
+									</td>
+								</tr>
+							</tfoot>
                         </table>
                     </div>
                 </div>
@@ -120,7 +128,6 @@
 	<div id="add" class="gray-bg" v-show="false">
 		<div class="col-sm-12">
 			<div class="ibox-title">
-				<!-- <h4>添加</h4> -->
 				<div class="ibox-tools">
 					<a class="collapse-link"> <i class="fa fa-chevron-up"></i>
 					</a> 
@@ -275,7 +282,40 @@
 	            checkboxClass: 'icheckbox_square-green',
 	            radioClass: 'iradio_square-green',
 	        });
+	        
+	       
+	        layui.laydate.render({
+                elem: '#test29'
+                ,theme: 'molv'
+              });
+            show.findAll(pagex,sizex);
+         // 调用分页
+            toPage();
 	    });
+	    var pagex = 1;
+        var sizex = 5;
+        var countx;
+        function toPage(){
+        	// 分页完整功能   
+            layui.laypage.render({
+               elem: 'pagex'
+               ,count: 30
+               ,limit: 5
+               ,limits: [5,7,10,15,25,30]
+               ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+               ,jump: function(obj){
+             	  console.log(obj);
+             	  
+ 				pagex = obj.curr;
+ 				sizex = obj.limit;
+ 				show.findAll(obj.curr,obj.limit);
+ 				
+ 				console.log(obj.curr + " " + obj.groups+" "+show.countx);
+               }
+             });
+        }
+	    
+	    
 	    Vue.filter("df",function(dateStr){
 			var dd=new Date(dateStr);
 			var y=dd.getFullYear();
@@ -289,21 +329,28 @@
 			el:"#show",
 			data:{
 				list:"",
-				
+				countx:0
 			},
 			created(){
 				this.repalce();
-				this.findAll();
+				//this.findAll();
 			},
 			methods:{
 				repalce(){
 					mythis=this;
 				},
-				findAll(){
+				/* findAll(){
 					mythis.$http.get("http://localhost:9999/productIns/findAll").then(function(result){
 						mythis.list=result.body;
 					});
+				}, */
+				findAll(currPage,pageSize){
+					mythis.$http.post("http://localhost:9999/productIns/findAll",{"currPage":currPage,"pageSize":pageSize},{emulateJSON:true}).then(function(result){
+						mythis.list=result.body.list;
+						mythis.countx=result.body.count;
+					});
 				},
+				
 				del(id){
 					/* var _this = this; */
 					layer.confirm('您是真删除么？', {
@@ -323,27 +370,6 @@
 						});
 					});
 				},
-				/* 批量删除 */
-				delall(id){
-					/* var _this = this; */
-					layer.confirm('您是真删除么？', {
-						  icon: 7,
-						  btn: ['YES','NO'] //按钮
-						}, function(){
-							// 在点下yes按钮后发送删除请求给后台，删除数据库中的数据
-							 mythis.$http.post("http://localhost:9999/productIns/deleteAll",{"piid":id,"_method":"delete"},{emulateJSON:true}).then(function(){
-								 mythis.findAll();
-								  layer.msg('删除成功', {icon: 1});
-							 });
-							
-						}, function(){
-						  layer.msg('谢谢手下留情', {
-						   /*  time: 2000, //2s后自动关闭 */
-						    icon: 6
-						});
-					});
-				},
-				
 				
 				saveui(){
 					layer.open({

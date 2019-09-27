@@ -1,6 +1,8 @@
 package com.woniu.web.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,9 +50,21 @@ public class ProductInController {
 		 productInservice.findOne(piid);
 	}
 	//查询所有
-	@GetMapping("findAll")
-	public List<Productin> findAll() { 
+	/*
+	 * @GetMapping("findAll") public List<Productin> findAll() {
+	 * 
+	 * return productInservice.findAll(); }
+	 */
+	@PostMapping("findAll")
+	public Map<String, Object> findAll(Integer currPage,Integer pageSize) {
+		Map<String,Object> map = new HashMap<>();
 		
-		return productInservice.findAll();
+		List<Productin> list = productInservice.findAll(currPage,pageSize);
+		Integer count = productInservice.count();
+		
+		map.put("list", list);
+		map.put("count", count);
+		
+		return map;
 	}
 }
