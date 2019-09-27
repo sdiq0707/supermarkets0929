@@ -7,12 +7,12 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="shortcut icon" href="../favicon.ico"> 
-    <link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
-    <link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
-    <link href="../css/plugins/iCheck/custom.css" rel="stylesheet">
-    <link href="../css/animate.css" rel="stylesheet">
-    <link href="../css/style.css?v=4.1.0" rel="stylesheet">
-     <link href="../layui/css/layui.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../../css/animate.css" rel="stylesheet">
+    <link href="../../css/style.css?v=4.1.0" rel="stylesheet">
+     <link href="../../layui/css/layui.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
     td {  
       text-align: center;
@@ -151,23 +151,23 @@
     </div>
 
     <!-- 全局js -->
-    <script src="../js/jquery.min.js?v=2.1.4"></script>
-    <script src="../js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="../../js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../js/bootstrap.min.js?v=3.3.6"></script>
 	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
 	<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
 
     <!-- Peity -->
-    <script src="../js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="../../js/plugins/peity/jquery.peity.min.js"></script>
     <!-- 自定义js -->
-    <script src="../js/content.js?v=1.0.0"></script>
+    <script src="../../js/content.js?v=1.0.0"></script>
     <!-- iCheck -->
-    <script src="../js/plugins/iCheck/icheck.min.js"></script>
+    <script src="../../js/plugins/iCheck/icheck.min.js"></script>
     <!-- Peity -->
-    <script src="../js/demo/peity-demo.js"></script>
-    <script src="../layui/layui.js"></script>'
-   <script src="../layui/layui.all.js"></script>
+    <script src="../../js/demo/peity-demo.js"></script>
+    <script src="../../layui/layui.js"></script>'
+   <script src="../../layui/layui.all.js"></script>
 	<!-- layerDate plugin javascript -->
-    <script src="../js/plugins/layer/laydate/laydate.js"></script>
+    <script src="../../js/plugins/layer/laydate/laydate.js"></script>
 <!-- 分页 -->
 
 </body>
@@ -309,9 +309,13 @@
 					this.flagsave=true;
 				},
 				save() {
-					if(this.pstate==""||this.pstate==null){
-						this.stateflag=true;
+					if(this.ptypeid==''||this.ptypeid==null){
+						alert("商品类型不能为空,且必须为数字")
 					}else{
+						if(this.supplierid==''||this.supplierid==null){
+							alert("供应商不能为空,且必须为数字")
+						}else{
+					if(this.pstate=="在售"||this.pstate=="已下架"){
 						this.stateflag=false;
 					var json={
 							pname:this.pname,ptypeid:this.ptypeid,supplierid:this.supplierid,pspecification:this.pspecification,
@@ -323,7 +327,11 @@
 						this.pname=this.ptypeid=this.supplierid=this.pspecification=this.pcolor=this.pstate=this.punit=this.pimportprice=this.psellprice=this.pstocknum=this.pcautionnum=this.pdeaddate=this.psid=this.pothers='';
 						this.flagsave=false;
 					});
+					}else{
+						this.stateflag=true;
 					}
+					}
+				    }
 				},
 				updateUI(item) {
 					this.flag = true;

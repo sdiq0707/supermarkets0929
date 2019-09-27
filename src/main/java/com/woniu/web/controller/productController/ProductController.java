@@ -24,6 +24,7 @@ public class ProductController {
 @PostMapping
 @ResponseBody()
 public void save(@RequestBody Product product) {
+	System.out.println(product);
 	service.save(product) ;
 }
 @DeleteMapping
@@ -41,6 +42,7 @@ public void update(Product product) {
 @ResponseBody
 public List<Product> findAll(){
 	List<Product> list=service.select();
+	System.out.println(list.size());
 	return list;
 }
 @PutMapping("updown")
