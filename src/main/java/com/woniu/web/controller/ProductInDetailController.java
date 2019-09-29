@@ -19,30 +19,30 @@ import com.woniu.service.IProductINDetailService;
 @RestController
 @RequestMapping("/productInDetails")
 public class ProductInDetailController {
-	@Autowired
+	@Autowired  
 	private IProductINDetailService productInDetailservice;
 
-	@PostMapping
+	@PostMapping("save")  
 	public void save(@RequestBody Productindetail productindetail) {
 		productInDetailservice.save(productindetail);
 	}
 
-	@DeleteMapping
+	@DeleteMapping("delete")
 	public void delete(int piid) {
 		productInDetailservice.delete(piid);
 	}
 
-	@PutMapping
+	@PutMapping("update")
 	public void update(Productindetail productindetail) {
 		productInDetailservice.update(productindetail);
 	}
 
-	@GetMapping("/findOne/{piid}")
+	@GetMapping("findOne")
 	public void findOne(@PathVariable("piid") int piid) {
 		 productInDetailservice.find(piid);
 	}
 
-	@GetMapping
+	@GetMapping("findAll")
 	public List<Productindetail> findAll() {
 		return productInDetailservice.findAll();
 	}

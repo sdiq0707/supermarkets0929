@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>进货细节表</title>  
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<!-- 发送ajax请求引用vue-resource $http-->
+<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+<link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="zlh">
+		<div>
+			<!-- 双向绑定vue中data属性 -->
+			商品编号:<input type="text" v-model="productid" /> 
+			商品名称:<input type="text" v-model="pname" /> 
+			进货数量:<input type="text" v-model="piinquantiy" /> 
+			进货单价:<input type="text" v-model="pimportprice" /> 
+			供应商编号:<input type="text" v-model="supplierid" /> 
+			<button @click="save()">添加</button>
+		</div>
+		<div id="updateDiv" v-show="flag">
+			<!-- v-show隐藏修改输入框flag是vue实例中的数据flag -->
+			<!-- 带u的变量指修改操作，双向绑定的是data里带u的属性 -->
+			<input type="hidden" v-model="u_piid" />
+			商品编号:<input type="text" v-model="u_productid" /> 
+			商品名称:<input type="text" v-model="u_pname" /> 
+			进货数量:<input type="text" v-model="u_piinquantiy" /> 
+			进货单价:<input type="text" v-model="u_pimportprice" /> 
+			供应商编号:<input type="text" v-model="u_supplierid" /> 
+			<button @click="update()">确认修改</button>
+		</div>
+		<!-- table样式是bootstap的样式 -->
+		<table class="table">
+			<tr>
+				<th>进货单编号</th>
+				<th>商品编号</th>
+				<th>商品名称</th>
+				<th>进货数量</th>
+				<th>进货单价</th>
+				<th>供应商编号</th>
+				<th>操作</th>
+			</tr>
+			<tr v-for="item in list">
+				<td>{{item.piid}}</td>
+				<td>{{item.productid}}</td>
+				<td>{{item.pname}}</td>
+				<td>{{item.piinquantiy}}</td>
+				<td>{{item.pimportprice}}</td>
+				<td>{{item.supplierid}}</td>
+				<td>
+					<a class="btn btn-warning" @click="del(item.piid)">删除</a>
+					|
+					<a class="btn btn-primary" @click="updateUI(item)">修改</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		var vue = new Vue({
+			el:"#zlh",
+			data: {
+				piid:"",
+				productid:"",
+				pname:"",
+				piinquantiy:"",
+				pimportprice:"",
+				supplierid:"",
+				u_piid:"",
+				u_productid:"",
+				u_pname:"",
+				u_piinquantiy:"",
+				u_pimportprice:"",
+				u_supplierid:"",
+				flag:false,
+				list:""
+			},
+			created(){
+				this.findAll();
+			},
+			methods: {
+				findAll(){
+					/* .then(function(result){});用来接后台传来的Josn返回值,then是调用成功后的回调函数 */
+					this.$http.get("http://localhost:9999/productInDetails/findAll").then(function(result){
+						/* result将返回的数组给data里的list 然后v-for将data里的list循环*/
+						this.list=result.body;
+					});
+				},
+				save(){
+					/* 将前台接收到的数据要传给后台 */
+					var json={	
+							productid:this.productid,
+							pname:this.pname,
+							piinquantiy:this.piinquantiy,
+							pimportprice:this.pimportprice,
+							supplierid:this.supplierid
+					};
+					this.$http.post("http://localhost:9999/productInDetails/save",json).then(function(){
+					/* 调用findAll方法将所有数据展示出来 进行添加操作*/
+					this.findAll();
+					/* 增加完成之后让文本框内容为空 */
+					this.productid=this.pname=this.piinquantiy=this.pimportprice=this.supplierid="";
+					});
+				},
+				del(piid){
+					/* "_method":"delete"理解为将post转为delete，然后就能找到@DeleteMapping， 加上{emulateJSON:true}后台能够接到数据 */
+					this.$http.post("http://localhost:9999/productInDetails/del",{"piid":piid,"_method":"delete"},{emulateJSON:true}).then(function(){
+						this.findAll();
+					});
+				},
+				updateUI(item){
+					/*updateUI（）实现 当点击修改按钮的时候，数据能够显示在输入框里，数据回显，item参数是循环的当前对象 */
+					this.u_piid=item.piid,
+					this.u_productid=item.productid,
+					this.u_pname=item.pname,
+					this.u_piinquantiy=item.piinquantiy,
+					this.u_pimportprice=item.pimportprice,
+					this.u_supplierid=item.supplierid,
+					this.flag=true
+				},
+				update(){
+					var json={
+							piid:this.u_piid,
+							productid:this.u_productid,
+							pname:this.u_pname,
+							piinquantiy:this.u_piinquantiy,
+							pimportprice:this.u_pimportprice,
+							supplierid:this.u_supplierid,
+							"_method":"put"
+					};
+					this.$http.post("http://localhost:9999/productInDetails/update",json,{emulateJSON:true}).then(function(){
+						this.findAll();
+						/* 修改完以后输入框有隐藏 */
+						this.flag=false;
+					});
+				}
+				
+			}
+			
+		});
+	</script>
+</body>
+</html>
