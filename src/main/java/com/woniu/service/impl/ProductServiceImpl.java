@@ -41,4 +41,17 @@ public class ProductServiceImpl implements IProductService {
 		return mapper.selectByExample(null);
 	}
 
-}
+	@Override
+	public void upAndDown(Integer productid) {
+		Product product=select(productid);
+		String others=product.getPstate();
+		if(others!=null) {
+		if(others.equals("在售")) {
+			product.setPstate("已下架");
+		}else {
+			product.setPstate("在售");
+		}
+		update(product);
+	}
+
+}}

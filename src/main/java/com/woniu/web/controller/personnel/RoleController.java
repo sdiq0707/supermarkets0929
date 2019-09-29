@@ -32,9 +32,14 @@ public class RoleController {
 
 	@DeleteMapping
 	@ResponseBody
+<<<<<<< HEAD
 	public String delete(@PathVariable("roleid") int roleid) {
 		roleService.delete(roleid);
 		return "true";
+=======
+	public void delete(Integer roleid) {
+		roleService.delete(roleid);
+>>>>>>> branch 'master' of git@github.com:sdiq0707/supermarkets.git
 	}
 
 	@PutMapping

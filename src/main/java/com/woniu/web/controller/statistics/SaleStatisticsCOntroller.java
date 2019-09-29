@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.woniu.domain.Triple;
 import com.woniu.service.ISalesDetailService;
+<<<<<<< HEAD
 import com.woniu.service.ISalesService;
 
 @Controller
@@ -64,6 +65,18 @@ public class SaleStatisticsCOntroller {
 	@PostMapping("high2")
 	@ResponseBody
 	public Map high2() {
+=======
+
+@Controller
+@RequestMapping("saleStatistics")
+public class SaleStatisticsCOntroller {
+	@Autowired
+	private ISalesDetailService service;
+	
+	@PostMapping("high")
+	@ResponseBody
+	public Map high() {
+>>>>>>> branch 'master' of git@github.com:sdiq0707/supermarkets.git
 		List<String> list = new ArrayList<>();
 		List<Long> list2 = new ArrayList<>();
 		List<Double> list3 = new ArrayList<>();

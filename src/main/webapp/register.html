@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title> - 注册</title>
+    <title> - SuperMarket注册 -</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
 
@@ -26,20 +26,20 @@
         <div>
             <div>
 
-                <h1 class="logo-name">H+</h1>
+                <h1 class="logo-name">S+</h1>
 
             </div>
-            <h3>欢迎注册 H+</h3>
-            <p>创建一个H+新账户</p>
+            <h3>欢迎注册 S+</h3>
+            <p>创建一个S+新账户</p>
             <form class="m-t" role="form" action="login.html">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="请输入用户名" required="">
+                    <input type="text" name="username" class="form-control" placeholder="请输入用户名" required="" aria-required="true">
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" placeholder="请输入密码" required="">
+                    <input type="password" name="password" class="form-control" placeholder="请输入密码" required="" aria-required="true">
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" placeholder="请再次输入密码" required="">
+                    <input type="password" name="password" class="form-control" placeholder="请再次输入密码" required="" aria-required="true">
                 </div>
                 <div class="form-group text-left">
                     <div class="checkbox i-checks">
@@ -59,6 +59,7 @@
     <!-- 全局js -->
     <script src="js/jquery.min.js?v=2.1.4"></script>
     <script src="js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="layer/layer.js"></script>
     <!-- iCheck -->
     <script src="js/plugins/iCheck/icheck.min.js"></script>
     <script>
@@ -67,6 +68,32 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
+            
+            
+            $("button:eq(0)").click(function(){
+				var params = $("form:eq(0)").serialize();
+				$.ajax({
+					type:"post",
+					url:"/users/register",
+					data:params,
+					headers:{
+						"Accept":"application/json"
+					},
+					success:function(data){
+						console.log(data.status+"--"+data.path);
+						
+						if(data.status == 200) {
+							layer.msg('注册成功', {icon: 6});
+							if("path" in data){
+								//window.location = data.path;
+							}
+						} else {
+							layer.msg('注册失败', {icon: 6});
+						}
+						
+					}
+				});
+			});
         });
     </script>
 
