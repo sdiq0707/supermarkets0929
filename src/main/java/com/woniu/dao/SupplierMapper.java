@@ -4,7 +4,7 @@ import com.woniu.domain.Supplier;
 import com.woniu.domain.SupplierExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-
+ 
 public interface SupplierMapper {
     int countByExample(SupplierExample example);
 

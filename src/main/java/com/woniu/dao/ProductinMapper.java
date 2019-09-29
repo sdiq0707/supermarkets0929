@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
-
+ 
 public interface ProductinMapper {
 	List<Productin> findAllBySql(Map<String, Integer> data);
 	

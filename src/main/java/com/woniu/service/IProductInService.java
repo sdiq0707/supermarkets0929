@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.woniu.domain.Productin;
 import com.woniu.domain.Tlog;
-
+ 
 public  interface IProductInService {   
 	public void save(Productin productin);
 	public void delete(Integer piid);

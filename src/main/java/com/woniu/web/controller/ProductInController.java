@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.woniu.domain.Productin;
 import com.woniu.service.IProductInService;
-
+ 
 @RestController
 @RequestMapping("/productIns")
 public class ProductInController {

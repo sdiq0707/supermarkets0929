@@ -173,7 +173,7 @@
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
     update supplier
-    <set >
+    <set > 
       <if test="record.supplierid != null" >
         SupplierID = #{record.supplierid,jdbcType=INTEGER},
       </if>

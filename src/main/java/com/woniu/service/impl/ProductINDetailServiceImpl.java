@@ -12,7 +12,7 @@ import com.woniu.dao.ProductindetailMapper;
 import com.woniu.domain.Productindetail;
 import com.woniu.domain.Triple;
 import com.woniu.service.IProductINDetailService;
-
+ 
 @Service
 @Transactional
 public class ProductINDetailServiceImpl implements IProductINDetailService {
