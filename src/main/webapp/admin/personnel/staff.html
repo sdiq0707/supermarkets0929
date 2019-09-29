@@ -347,7 +347,7 @@ td {
 				
 				
 				
-				 findOne(staffid) {
+				 findOne(staffid) { 
 					alert(staffid);
 					this.$http.post("http://localhost:9999/staffs/findOne",{staffid:staffid}),{emulateJSON:true}).then(function(result) {
 						this.list = result.body;
