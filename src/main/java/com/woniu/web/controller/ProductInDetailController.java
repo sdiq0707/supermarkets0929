@@ -15,34 +15,34 @@ import org.springframework.web.bind.annotation.RestController;
 import com.woniu.domain.Productin;
 import com.woniu.domain.Productindetail;
 import com.woniu.service.IProductINDetailService;
-   
+  
 @RestController
 @RequestMapping("/productInDetails")
 public class ProductInDetailController {
-	@Autowired  
+	@Autowired
 	private IProductINDetailService productInDetailservice;
 
-	@PostMapping("save")  
+	@PostMapping
 	public void save(@RequestBody Productindetail productindetail) {
 		productInDetailservice.save(productindetail);
 	}
 
-	@DeleteMapping("delete")
+	@DeleteMapping
 	public void delete(int piid) {
 		productInDetailservice.delete(piid);
 	}
 
-	@PutMapping("update")
+	@PutMapping
 	public void update(Productindetail productindetail) {
 		productInDetailservice.update(productindetail);
 	}
 
-	@GetMapping("findOne")
+	@GetMapping("/findOne/{piid}")
 	public void findOne(@PathVariable("piid") int piid) {
 		 productInDetailservice.find(piid);
 	}
 
-	@GetMapping("findAll")
+	@GetMapping
 	public List<Productindetail> findAll() {
 		return productInDetailservice.findAll();
 	}

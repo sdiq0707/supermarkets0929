@@ -14,33 +14,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.woniu.domain.Supplier;
 import com.woniu.service.ISupplierService;
-   
+  
 @RestController
 @RequestMapping("/suppliers")
 public class SupplierController {
-	@Autowired  
+	@Autowired
 	private ISupplierService supplierService;
-	@PostMapping("save")
+	@PostMapping
 	public void save(@RequestBody Supplier supplier) {
 		supplierService.save(supplier);
 	}  
 
-	@DeleteMapping("delete")
+	@DeleteMapping
 	public void delete( int supplierid) {
 		supplierService.delete(supplierid);
 	}
 
-	@PutMapping("update")
+	@PutMapping
 	public void update(Supplier supplier) {
 		supplierService.update(supplier);
 	}
 
-	@GetMapping("findOne")
+	@GetMapping("/findOne/{supplierid}")
 	public void findOne(@PathVariable("supplierid") int supplierid) {
 		 supplierService.findOne(supplierid);
 	}
 
-	@GetMapping("findAll")
+	@GetMapping
 	public List<Supplier> findAll() {
 		return supplierService.findAll();
 	}

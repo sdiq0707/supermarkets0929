@@ -9,7 +9,7 @@
     <result column="PimportPrice" property="pimportprice" jdbcType="REAL" />
     <result column="SupplierID" property="supplierid" jdbcType="INTEGER" />
   </resultMap>
-   
+  
   <resultMap type="com.woniu.domain.Triple" id="aa">
 	<result column="a" property="a" jdbcType="VARCHAR" />
 	<result column="b" property="b" jdbcType="INTEGER" />

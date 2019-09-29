@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.woniu.domain.Productindetail;
 import com.woniu.domain.Triple;
-  
+ 
 public interface IProductINDetailService {
 	void save(Productindetail pd);
 	void delete(Integer piid);

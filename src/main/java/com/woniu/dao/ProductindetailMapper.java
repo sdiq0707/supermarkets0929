@@ -7,7 +7,7 @@ import com.woniu.domain.Triple;
 import java.math.BigDecimal;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
- 
+
 public interface ProductindetailMapper {
     int countByExample(ProductindetailExample example);
 
