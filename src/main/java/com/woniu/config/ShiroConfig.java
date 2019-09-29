@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
-@Configuration
+//@Configuration
 public class ShiroConfig {
 
 	@Bean

@@ -3,12 +3,12 @@ server:
   port: 9999
 
 #配置spring
-#spring: 
-#  datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://192.168.7.213:3306/supermarket?characterEncoding=UTF-8
-#    username: root
-#    password: 123456
+spring: 
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8
+    username: root
+    password: 
 
 #配置日志打印
 logging: 
